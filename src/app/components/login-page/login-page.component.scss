@@ -1,0 +1,73 @@
+.form-container {
+  border: solid gray 1px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  @media (max-width: 576px) {
+    font-size: 1rem;
+  }
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+a {
+  cursor: pointer;
+}
+
+
+input {
+  &.ng-invalid.ng-touched {
+    border: 1px solid red;
+  }
+
+  &.ng-valid.ng-touched {
+    border: 1px solid green;
+  }
+}
+
+#submit-button {
+  width: 100%;
+}
+
+#google-auth-button {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  align-items: center;
+  font-size: 1.2rem;
+  width: 100%;
+  height: 3.3rem;
+  border: none;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.google-logo {
+  width: 1.5rem;
+  margin-right: 1rem;
+}
+
+.atlassian-logo {
+  display: flex;
+  margin: auto;
+  max-width: 200px;
+}
+
+.break-line {
+  border: #696969 solid 1px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.signup-link {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}

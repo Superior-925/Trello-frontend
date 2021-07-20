@@ -1,0 +1,75 @@
+<header>
+  <div class="container-xl mt-5">
+    <div class="row justify-content-center">
+      <div class="col-5 col-lg-2">
+        <a (click)="goToHomePage()"><img src="assets/trello-logo-blue.svg" alt="trello-logo-blue"></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="content">
+  <div class="container-xl mt-5">
+    <div class="row justify-content-center">
+      <div class="col-10 col-lg-5 form-container">
+        <div class="row mt-4 mb-4">
+          <span class="text-center">Log in to Trello</span>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+
+            <form [formGroup]="signUpForm" novalidate (ngSubmit)="submit()">
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="email" placeholder="Enter email"/>
+
+                <div class="alert alert-danger"
+                     *ngIf="signUpForm.controls['email'].invalid && signUpForm.controls['email'].touched">
+                  Email not specified
+                </div>
+              </div>
+
+              <div class="form-group mt-3">
+                <input type="password" class="form-control" name="email" formControlName="password" placeholder="Enter password" />
+
+                <div class="alert alert-danger"
+                     *ngIf="signUpForm.controls['password'].invalid && signUpForm.controls['password'].touched">
+                  Password not specified
+                </div>
+              </div>
+
+              <div class="form-group mt-4 mb-4 d-flex justify-content-center">
+                <button class="btn btn-default btn btn-primary btn-lg btn-block" id="submit-button" [disabled]="signUpForm.invalid">
+                  Submit
+                </button>
+              </div>
+            </form>
+
+            <div class="row mb-4">
+              <span class="text-center">OR</span>
+            </div>
+
+            <button type="button" (click)="googleAuth()" id="google-auth-button"><img src="assets/google-logo.jpg" class="google-logo">Continue with Google</button>
+            <hr class="break-line">
+            <div class="row mb-4">
+              <a (click)="goToSignUpPage()" class="signup-link">Sign up for an account</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container-xl mt-5">
+    <div class="atlassian-logo">
+      <img src="assets/atlassian-logo-blue-small.svg" alt="atlassian-logo">
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-6 text-center mt-3">
+      <h5>© Copyright 2021. All rights reserved.</h5>
+    </div>
+  </div>
+</footer>

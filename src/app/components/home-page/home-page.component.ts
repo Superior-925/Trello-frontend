@@ -14,15 +14,11 @@ export class HomePageComponent implements OnInit {
   }
 
   goToSignupPage() {
-
     this.router.navigate(['/signup']);
-
   }
 
   goToLoginPage() {
-
     this.router.navigate(['/login']);
-
   }
 
 }

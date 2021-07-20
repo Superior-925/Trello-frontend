@@ -1,0 +1,101 @@
+body {
+  box-sizing: border-box;
+}
+
+header {
+  width: 100%;
+}
+
+a {
+  cursor: pointer;
+}
+
+.header-nav {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  display: flex;
+  min-height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 576px) {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+#logo-id {
+  width: 126px;
+  margin-left: 1rem;
+  @media (max-width: 576px) {
+    margin-top: 1rem;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  @media (max-width: 576px) {
+    margin-top: 1rem;
+  }
+}
+
+#login-link {
+  font-size: 1.5rem;
+  color: #0065FF;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+
+}
+
+#signup-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 110px;
+  height: 35px;
+  font-size: 1.5rem;
+  background-color: #0065FF;
+  color: white;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  &:hover {
+    background-color: #0051CC;
+  }
+}
+
+.trello-info-title {
+  font-size: 3em;
+}
+
+#text-block-sign-up-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  border-radius: 4px;
+  width: 210px;
+  height: 50px;
+  font-size: 1.5rem;
+  background-color: #0065FF;
+  color: white;
+  &:hover {
+    background-color: #0051CC;
+  }
+}
+
+.content {
+  margin-top: 7rem;
+  margin-bottom: 8rem;
+}
+
+.atlassian-logo {
+  display: flex;
+  margin: auto;
+  max-width: 200px;
+}
+
+
+
