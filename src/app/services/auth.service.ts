@@ -4,6 +4,7 @@ import {config} from 'config';
 import {User} from '../interfaces/user'
 import {HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {BoardService} from "./board.service";
 
 const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}), observe: 'response'};
 
@@ -11,7 +12,7 @@ const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'applicatio
 
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router){ }
+  constructor(private http: HttpClient, private router: Router, private boardService: BoardService){ }
 
   signUp(email: User, password: User){
 
@@ -24,9 +25,9 @@ export class AuthService {
       .subscribe((responseData: any) => {
         if (responseData.status == 200) {
           this.router.navigate(['/workspace']);
+          localStorage.setItem('token', responseData.body.token);
+          localStorage.setItem('userId', responseData.body.id);
         }
-        localStorage.setItem('token', responseData.body.token);
-        localStorage.setItem('userId', responseData.body.id);
       },
       error => console.log(error));
   }
@@ -43,6 +44,7 @@ export class AuthService {
         }
         localStorage.setItem('token', responseData.body.token);
         localStorage.setItem('userId', responseData.body.id);
+
       },
       error => console.log(error));
   }

@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <div class="add-board-form">
-      <form [formGroup]="createBoardForm" novalidate (ngSubmit)="submit()" class="d-flex align-items-center">
+      <form [formGroup]="createBoardForm" novalidate (ngSubmit)="addBoard()" class="d-flex align-items-center">
       <div class="form-group">
         <input type="text" class="form-control" formControlName="board" placeholder="Enter board name"/>
       </div>
@@ -28,12 +28,21 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Select board
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" *ngFor="let item of itemsLinks" (click)="selectBoard(item.id, item.name)">{{item.name}}</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" *ngIf="userBoards.length; then haveBoards else noBoards">
+          </div>
+
+          <ng-template #haveBoards>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" *ngFor="let item of userBoards" (click)="selectBoard(item.boardId, item.boardName)">{{item.boardName}}</a></li>
+            </ul>
+          </ng-template>
+
+          <ng-template #noBoards>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item">No boards</a></li>
+            </ul>
+          </ng-template>
+
         </li>
       </ul>
       <form class="d-flex">
@@ -50,8 +59,19 @@
     <div class="row">
       <div class="col-10 d-flex align-items-center justify-content-center m-auto">
         <h5 class="board-title ml-2">Name of selected board:<span class="board-title-color">{{boardName}}</span></h5>
-        <button type="button" class="btn btn-primary delete-board-button">Delete board</button>
+        <button type="button" class="btn btn-primary delete-board-button" (click)="renameBoard()">Rename board</button>
+        <button type="button" class="btn btn-primary delete-board-button" (click)="deleteBoard(boardId)">Delete board</button>
       </div>
+    </div>
+  </div>
+
+  <div class="container-fluid boards mt-4">
+    <div class="row">
+      <section class="col column-item">One</section>
+      <section class="col column-item">Two</section>
+      <section class="col column-item">Three</section>
+      <section class="col column-item">Four</section>
+      <section class="col column-item">Five</section>
     </div>
   </div>
 </main>
