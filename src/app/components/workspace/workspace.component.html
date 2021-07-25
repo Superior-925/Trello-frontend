@@ -30,21 +30,11 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" *ngIf="userBoards.length; then haveBoards else noBoards">
           </div>
-
-          <ng-template #haveBoards>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" *ngFor="let item of userBoards" (click)="selectBoard(item.boardId, item.boardName)">{{item.boardName}}</a></li>
-            </ul>
-          </ng-template>
-
-          <ng-template #noBoards>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item">No boards</a></li>
-            </ul>
-          </ng-template>
-
         </li>
       </ul>
+      <div class="form-group">
+        <input type="text" class="form-control rename-board" [(ngModel)]="newBoardName" (change)="renameBoard()" value="{{boardName}}" placeholder="Current board"/>
+      </div>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -52,6 +42,19 @@
     </div>
   </div>
 </nav>
+
+  <ng-template #haveBoards>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a class="dropdown-item" *ngFor="let item of userBoards" (click)="selectBoard(item.boardId, item.boardName)">{{item.boardName}}</a></li>
+    </ul>
+  </ng-template>
+
+  <ng-template #noBoards>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a class="dropdown-item">No boards</a></li>
+    </ul>
+  </ng-template>
+
 </header>
 
 <main>
@@ -60,9 +63,32 @@
       <div class="col-10 d-flex align-items-center justify-content-center m-auto">
         <h5 class="board-title ml-2">Name of selected board:<span class="board-title-color">{{boardName}}</span></h5>
         <button type="button" class="btn btn-primary delete-board-button" (click)="renameBoard()">Rename board</button>
-        <button type="button" class="btn btn-primary delete-board-button" (click)="deleteBoard(boardId)">Delete board</button>
+        <button type="button" class="btn btn-primary delete-board-button" (click)="deleteBoard()">Delete board</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="renBoardStatus == true">
+
+    <div class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="renameBoard()"></button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 
   <div class="container-fluid boards mt-4">
@@ -74,6 +100,7 @@
       <section class="col column-item">Five</section>
     </div>
   </div>
+
 </main>
 
 

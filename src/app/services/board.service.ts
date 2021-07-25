@@ -10,8 +10,6 @@ export class BoardService{
 
   token: any = localStorage.getItem('token');
 
-
-
   constructor(private http: HttpClient, private router: Router){ }
 
   loadBoards(): Observable<any> {
@@ -42,4 +40,14 @@ export class BoardService{
     return this.http.delete(`http://${config.development.host}:${config.development.port}/board`, httpOptionsDelete);
   }
 
+  renameBoard(boardId: number, boardName: string) {
+
+    let body: {} = {boardId: boardId, boardName: boardName};
+
+    let jsonBody = JSON.stringify(body);
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+
+    return this.http.put(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+  }
 }
