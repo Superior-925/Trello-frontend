@@ -1,0 +1,265 @@
+<!--  <div class="container-fluid boards mt-4">-->
+<!--    <div class="row d-flex">-->
+<!--      <div class="col list-item ">-->
+<!--        <div class="list-title d-flex justify-content-center">-->
+<!--          {{todoList}}-->
+<!--        </div>-->
+<!--        <div class="dividing-line"></div>-->
+<!--        <div *ngIf="addTaskStatusTodoList; then addTaskButtonTodoList else inputTaskFormTodoList"></div>-->
+<!--      </div>-->
+<!--      <div class="col list-item">-->
+<!--        <div class="list-title d-flex justify-content-center">-->
+<!--        {{inProgressList}}-->
+<!--        </div>-->
+<!--        <div class="dividing-line"></div>-->
+<!--        <div *ngIf="addTaskStatusProgressList; then addTaskButtonProgressList else inputTaskFormProgressList"></div>-->
+<!--      </div>-->
+<!--      <div class="col list-item">-->
+<!--        <div class="list-title d-flex justify-content-center">-->
+<!--        {{codedList}}-->
+<!--        </div>-->
+<!--        <div class="dividing-line"></div>-->
+<!--        <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else inputTaskFormCodedList"></div>-->
+<!--      </div>-->
+<!--      <div class="col list-item">-->
+<!--        <div class="list-title d-flex justify-content-center">-->
+<!--        {{testingList}}-->
+<!--        </div>-->
+<!--        <div class="dividing-line"></div>-->
+<!--        <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else inputTaskFormTestingList"></div>-->
+<!--      </div>-->
+<!--      <div class="col list-item">-->
+<!--        <div class="list-title d-flex justify-content-center">-->
+<!--        {{doneList}}-->
+<!--        </div>-->
+<!--        <div class="dividing-line"></div>-->
+<!--        <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else inputTaskFormDoneList"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+
+
+<div class="wrapper">
+
+    <div class="list-item ">
+      <div class="list-title d-flex justify-content-center">
+        {{todoList}}
+      </div>
+      <div class="dividing-line"></div>
+      <div class="form-group" *ngIf="todoListTasks.length; then haveTasksTodoList else noTasks">
+      </div>
+      <div *ngIf="addTaskStatusTodoList; then addTaskButtonTodoList else inputTaskFormTodoList"></div>
+    </div>
+
+    <div class="list-item">
+      <div class="list-title d-flex justify-content-center">
+        {{inProgressList}}
+      </div>
+      <div class="dividing-line"></div>
+      <div class="form-group" *ngIf="inProgressListTasks.length; then haveTasksProgressList else noTasks">
+      </div>
+      <div *ngIf="addTaskStatusProgressList; then addTaskButtonProgressList else noTasks"></div>
+    </div>
+
+    <div class="list-item">
+      <div class="list-title d-flex justify-content-center">
+        {{codedList}}
+      </div>
+      <div class="dividing-line"></div>
+      <div class="form-group" *ngIf="codedListTasks.length; then haveTasksCodedList else noTasks">
+      </div>
+      <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else noTasks"></div>
+    </div>
+
+    <div class="list-item">
+      <div class="list-title d-flex justify-content-center">
+        {{testingList}}
+      </div>
+      <div class="dividing-line"></div>
+      <div class="form-group" *ngIf="testingListTasks.length; then haveTasksTestingList else noTasks">
+      </div>
+      <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else noTasks"></div>
+    </div>
+
+    <div class="list-item">
+      <div class="list-title d-flex justify-content-center">
+        {{doneList}}
+      </div>
+      <div class="dividing-line"></div>
+      <div class="form-group" *ngIf="doneListTasks.length; then haveTasksDoneList else noTasks">
+      </div>
+      <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else noTasks"></div>
+    </div>
+
+</div>
+
+<ng-template #haveTasksTodoList>
+  <div *ngFor="let item of todoListTasks">
+    <div class="title">Task title:<input type="text" class="form-control rename-board-input" value="{{item.taskTitle}}" placeholder="Current board"/></div>
+    <div class="text">Task text:<input type="text" class="form-control rename-board-input" value="{{item.taskText}}" placeholder="Current board"/></div>
+  </div>
+</ng-template>
+
+<ng-template #haveTasksProgressList>
+  <div *ngFor="let item of inProgressListTasks">
+    <div class="title">Task title:<input type="text" class="form-control rename-board-input" value="{{item.taskTitle}}" placeholder="Current board"/></div>
+    <div class="text">Task text:<input type="text" class="form-control rename-board-input" value="{{item.taskText}}" placeholder="Current board"/></div>
+  </div>
+</ng-template>
+
+<ng-template #haveTasksCodedList>
+  <div *ngFor="let item of codedListTasks">
+    <div class="title">Task title:<input type="text" class="form-control rename-board-input" value="{{item.taskTitle}}" placeholder="Current board"/></div>
+    <div class="text">Task text:<input type="text" class="form-control rename-board-input" value="{{item.taskText}}" placeholder="Current board"/></div>
+  </div>
+</ng-template>
+
+<ng-template #haveTasksTestingList>
+  <div *ngFor="let item of testingListTasks">
+    <div class="title">Task title:<input type="text" class="form-control rename-board-input" value="{{item.taskTitle}}" placeholder="Current board"/></div>
+    <div class="text">Task text:<input type="text" class="form-control rename-board-input" value="{{item.taskText}}" placeholder="Current board"/></div>
+  </div>
+</ng-template>
+
+<ng-template #haveTasksDoneList>
+  <div *ngFor="let item of doneListTasks">
+    <div class="title">Task title:<input type="text" class="form-control rename-board-input" value="{{item.taskTitle}}" placeholder="Current board"/></div>
+    <div class="text">Task text:<input type="text" class="form-control rename-board-input" value="{{item.taskText}}" placeholder="Current board"/></div>
+  </div>
+</ng-template>
+
+<ng-template #noTasks>
+</ng-template>
+
+
+
+<ng-template #inputTaskFormTodoList>
+  <div class="add-task-block">
+    <form [formGroup]="createTaskFormTodoList" novalidate (ngSubmit)="addTask(todoList, createTaskFormTodoList.value.taskTitle, createTaskFormTodoList.value.taskText)"
+          class="d-flex align-items-center add-task-form">
+      <div class="form-group">
+        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
+      </div>
+      <div class="form-group d-flex">
+        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormTodoList.invalid">
+          Add task
+        </button>
+      </div>
+    </form>
+  <button type="button" class="add-task-button" (click)="addTaskStatusToggle(todoList)">Close form</button>
+  </div>
+</ng-template>
+
+<ng-template #addTaskButtonTodoList>
+  <div class="add-button">
+  <button type="button" class="add-task-button" (click)="addTaskStatusToggle(todoList)">Add task</button>
+  </div>
+</ng-template>
+
+<ng-template #inputTaskFormProgressList>
+  <div class="add-task-block">
+    <form [formGroup]="createTaskFormProgressList" novalidate (ngSubmit)="addTask(inProgressList, createTaskFormProgressList.value.taskTitle, createTaskFormProgressList.value.taskText)"
+          class="d-flex align-items-center add-task-form">
+      <div class="form-group">
+        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
+      </div>
+      <div class="form-group d-flex">
+        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormProgressList.invalid">
+          Add task
+        </button>
+      </div>
+    </form>
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(inProgressList)">Close form</button>
+  </div>
+</ng-template>
+
+<ng-template #addTaskButtonProgressList>
+  <div class="add-button">
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(inProgressList)">Add task</button>
+  </div>
+</ng-template>
+
+<ng-template #inputTaskFormCodedList>
+  <div class="add-task-block">
+    <form [formGroup]="createTaskFormCodedList" novalidate (ngSubmit)="addTask(codedList, createTaskFormCodedList.value.taskTitle, createTaskFormCodedList.value.taskText)"
+          class="d-flex align-items-center add-task-form">
+      <div class="form-group">
+        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
+      </div>
+      <div class="form-group d-flex">
+        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormCodedList.invalid">
+          Add task
+        </button>
+      </div>
+    </form>
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(codedList)">Close form</button>
+  </div>
+</ng-template>
+
+<ng-template #addTaskButtonCodedList>
+  <div class="add-button">
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(codedList)">Add task</button>
+  </div>
+</ng-template>
+
+<ng-template #inputTaskFormTestingList>
+  <div class="add-task-block">
+    <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList.value.taskText)"
+          class="d-flex align-items-center add-task-form">
+      <div class="form-group">
+        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
+      </div>
+      <div class="form-group d-flex">
+        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormTestingList.invalid">
+          Add task
+        </button>
+      </div>
+    </form>
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(testingList)">Close form</button>
+  </div>
+</ng-template>
+
+<ng-template #addTaskButtonTestingList>
+  <div class="add-button">
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(testingList)">Add task</button>
+  </div>
+</ng-template>
+
+<ng-template #inputTaskFormDoneList>
+  <div class="add-task-block">
+    <form [formGroup]="createTaskFormDoneList" novalidate (ngSubmit)="addTask(doneList, createTaskFormDoneList.value.taskTitle, createTaskFormDoneList.value.taskText)"
+          class="d-flex align-items-center add-task-form">
+      <div class="form-group">
+        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
+      </div>
+      <div class="form-group d-flex">
+        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormDoneList.invalid">
+          Add task
+        </button>
+      </div>
+    </form>
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(doneList)">Close form</button>
+  </div>
+</ng-template>
+
+<ng-template #addTaskButtonDoneList>
+  <div class="add-button">
+    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(doneList)">Add task</button>
+  </div>
+</ng-template>

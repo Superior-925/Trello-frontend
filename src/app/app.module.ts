@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from "@angular/common/http";
+import { ListsComponent } from './components/lists/lists.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {HttpClientModule} from "@angular/common/http";
     LoginPageComponent,
     SignupPageComponent,
     WorkspaceComponent,
+    ListsComponent,
   ],
   imports: [
     BrowserModule,

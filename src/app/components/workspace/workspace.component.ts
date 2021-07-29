@@ -14,21 +14,13 @@ import {Board} from "../../interfaces/board";
 
 export class WorkspaceComponent implements OnChanges, AfterViewInit{
 
-  //@Input() label: string;
-
   createBoardForm : FormGroup;
-
-  //renameBoardForm: FormGroup;
-
-  // userBoards: any = [{name: 'Number one', id: 3}, {name: 'Top board', id: 5}, {name: 'Other board', id: 8}];
 
   userBoards: any = [];
 
   boardName: string = '';
 
-  boardId: number = 0;
-
-  renBoardStatus: boolean = false;
+  boardId: number;
 
   newBoardName: string = '';
 
@@ -43,7 +35,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
   ngAfterViewInit(): void {
     this.boardService.loadBoards().subscribe((responseData: any) => {
         this.userBoards = JSON.parse(responseData.body);
-        this.boardName = this.userBoards[0].boardName;
+        if (this.userBoards.length) {
+          this.boardName = this.userBoards[0].boardName;
+          this.boardId = this.userBoards[0].boardId;
+        }
+        // console.log(this.userBoards);
+        // console.log(this.boardId);
       },
       error => console.log(error));
   }
@@ -62,10 +59,11 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
   }
 
   renameBoard() {
-    this.boardService.renameBoard(this.boardId, this.newBoardName).subscribe();
-    this.renBoardStatus = !this.renBoardStatus;
-    console.log(this.renBoardStatus);
-    console.log(this.newBoardName);
+    this.boardService.renameBoard(this.boardId, this.newBoardName).subscribe((responseData: any) => {
+      this.userBoards.forEach(function(item: any){
+        if (item.boardId == responseData.body.id) {item.boardName = responseData.body.boardName}
+      });
+    });
   }
 
   deleteBoard() {
@@ -74,7 +72,9 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
       this.boardService.deleteBoard(this.boardId).subscribe((responseData: any) => {
         let filterUserBoards = this.userBoards.filter((item:any) => item.boardId !== responseData.body);
         this.userBoards = filterUserBoards;
-        this.boardName = this.userBoards[0].boardName;
+        if (this.userBoards.length) {
+        this.boardName = this.userBoards[0].boardName;}
+        else {this.boardName = 'No boards'}
       });
     }
   }
@@ -82,7 +82,6 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
   selectBoard(id: number, board: string) {
     this.boardName = board;
     this.boardId = id;
-    //console.log("Board id = " + id, "Board name = " + board);
   }
 
 }

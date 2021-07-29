@@ -31,10 +31,14 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" *ngIf="userBoards.length; then haveBoards else noBoards">
           </div>
         </li>
+        <div class="rename-delete-block">
+          <div class="form-group rename-board">
+            <input type="text" class="form-control rename-board-input" [(ngModel)]="newBoardName" (change)="renameBoard()" value="{{boardName}}" placeholder="Current board"/>
+          </div>
+          <button type="button" class="btn btn-primary delete-board-button" (click)="deleteBoard()">Delete board</button>
+        </div>
       </ul>
-      <div class="form-group">
-        <input type="text" class="form-control rename-board" [(ngModel)]="newBoardName" (change)="renameBoard()" value="{{boardName}}" placeholder="Current board"/>
-      </div>
+
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -58,49 +62,7 @@
 </header>
 
 <main>
-  <div class="container-fluid mt-3">
-    <div class="row">
-      <div class="col-10 d-flex align-items-center justify-content-center m-auto">
-        <h5 class="board-title ml-2">Name of selected board:<span class="board-title-color">{{boardName}}</span></h5>
-        <button type="button" class="btn btn-primary delete-board-button" (click)="renameBoard()">Rename board</button>
-        <button type="button" class="btn btn-primary delete-board-button" (click)="deleteBoard()">Delete board</button>
-      </div>
-
-    </div>
-  </div>
-
-  <div *ngIf="renBoardStatus == true">
-
-    <div class="modal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="renameBoard()"></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="container-fluid boards mt-4">
-    <div class="row">
-      <section class="col column-item">One</section>
-      <section class="col column-item">Two</section>
-      <section class="col column-item">Three</section>
-      <section class="col column-item">Four</section>
-      <section class="col column-item">Five</section>
-    </div>
-  </div>
-
+  <app-lists [boardId]="boardId"></app-lists>
 </main>
 
 

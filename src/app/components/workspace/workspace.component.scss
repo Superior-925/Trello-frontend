@@ -7,27 +7,26 @@
 
 .rename-board {
   width: 150px;
+  display: flex;
+}
+
+.delete-board-button {
+  display: flex;
+  margin-left: 15px;
+}
+
+.rename-delete-block {
+  display: flex;
+}
+
+.rename-board-input {
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .board-title {
   text-decoration: underline;
 }
 
-.board-title-color {
-  color: red;
-}
 
-.delete-board-button {
-  display: flex;
-  margin-left: 2rem;
-}
-
-.main-block {
-}
-
-.column-item {
-  margin: 3px;
-  border: solid 1px;
-  border-radius:5px;
-
-}
