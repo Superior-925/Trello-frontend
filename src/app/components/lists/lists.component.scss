@@ -58,3 +58,34 @@
   font-size: 1.2rem;
   width: 15rem;
 }
+
+.task-title {
+  margin: 0.5rem auto;
+  width: 90%;
+  font-weight: bold;
+}
+
+.task-text {
+  margin: 0.5rem auto;
+  width: 90%;
+  font-weight: bold;
+}
+
+.task-wrapper {
+  margin: 0.5rem 0.5rem;
+  border: thick double #32a1ce;
+  border-radius:5px;
+}
+
+.options-block {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+}
+
+.list-options {
+  justify-content: center;
+  margin: -0.3rem auto 1rem auto;
+  display: flex;
+  width: 70%;
+}
