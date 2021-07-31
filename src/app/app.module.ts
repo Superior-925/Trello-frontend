@@ -16,6 +16,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from "@angular/common/http";
 import { ListsComponent } from './components/lists/lists.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { ListsComponent } from './components/lists/lists.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
