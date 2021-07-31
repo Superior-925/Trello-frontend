@@ -56,6 +56,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
         console.log(this.userBoards);
       },
       error => console.log(error));
+    this.createBoardForm.reset();
   }
 
   renameBoard() {

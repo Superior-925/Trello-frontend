@@ -33,6 +33,8 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
   createTaskFormTestingList: FormGroup;
   createTaskFormDoneList: FormGroup;
 
+  searchTaskForm: FormGroup;
+
   boardTasks: any = [];
 
   todoListTasks: any = [];
@@ -42,6 +44,8 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
   doneListTasks: any = [];
 
   @Input() boardId: number;
+
+  foundTasks: any = [];
 
   constructor(private taskService: TaskService) {
     this.createTaskFormTodoList = new FormGroup({
@@ -81,6 +85,11 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
         Validators.required
       ]),
       taskText: new FormControl('', [
+        Validators.required
+      ])
+    });
+    this.searchTaskForm = new FormGroup({
+      taskTitle: new FormControl('', [
         Validators.required
       ])
     });
@@ -129,8 +138,8 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
 
   }
 
-  addTask(listName: string, taskTitle: string, taskText: string) {
-    //console.log(this.workSpaceComponent.boardId);
+  addTask(listName: string, taskTitle: string, taskText: string, formGroup: any) {
+
     this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, taskText)
       .subscribe((responseData: any) => {
         let newTask = new Task(responseData.body.listName, responseData.body.taskTitle, responseData.body.taskText, responseData.body.id);
@@ -140,6 +149,7 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
         if (newTask.listName == "Testing") {this.testingListTasks.push(newTask)}
         if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
       });
+    formGroup.reset();
 
   }
 
@@ -183,6 +193,17 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
         }
       });
     }
+  }
+
+  searchTask(taskTitle: string, formGroup: any) {
+    this.taskService.searchTask(this.boardId, taskTitle).subscribe((responseData: any) => {
+      let foundTasks = JSON.parse(responseData.body);
+      this.foundTasks = foundTasks;
+      console.log(foundTasks);
+      console.log(foundTasks.length);
+
+    });
+    formGroup.reset();
   }
 
   drop(event: CdkDragDrop<string[]>) {

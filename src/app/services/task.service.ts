@@ -60,6 +60,13 @@ export class TaskService {
     return this.http.delete(`http://${config.development.host}:${config.development.port}/task`, httpOptionsDelete);
 
   }
+
+  searchTask(boardId: number, taskTitle: string): Observable<any> {
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response',params: {boardId: boardId, taskTitle: taskTitle}, responseType: 'text'};
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/task/search`, httpOptionsGet);
+  }
 }
 
 

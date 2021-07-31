@@ -1,3 +1,16 @@
+<nav class="navbar navbar-light bg-light search-form">
+  <div class="container-fluid">
+    <form class="d-flex form-group" [formGroup]="searchTaskForm" novalidate (ngSubmit)="searchTask(searchTaskForm.value.taskTitle, searchTaskForm)">
+      <div class="form-group">
+      <input class="form-control me-2" type="search" formControlName="taskTitle" placeholder="Enter the title of the task" aria-label="Search">
+      </div>
+      <div class="form-group search-button">
+        <button class="btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#myModal" [disabled]="searchTaskForm.invalid">Search</button>
+      </div>
+    </form>
+  </div>
+</nav>
+
 <div cdkDropListGroup>
 <div class="wrapper">
 
@@ -171,7 +184,7 @@
 
 <ng-template #inputTaskFormTodoList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormTodoList" novalidate (ngSubmit)="addTask(todoList, createTaskFormTodoList.value.taskTitle, createTaskFormTodoList.value.taskText)"
+    <form [formGroup]="createTaskFormTodoList" novalidate (ngSubmit)="addTask(todoList, createTaskFormTodoList.value.taskTitle, createTaskFormTodoList.value.taskText, createTaskFormTodoList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
@@ -197,7 +210,7 @@
 
 <ng-template #inputTaskFormProgressList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormProgressList" novalidate (ngSubmit)="addTask(inProgressList, createTaskFormProgressList.value.taskTitle, createTaskFormProgressList.value.taskText)"
+    <form [formGroup]="createTaskFormProgressList" novalidate (ngSubmit)="addTask(inProgressList, createTaskFormProgressList.value.taskTitle, createTaskFormProgressList.value.taskText, createTaskFormProgressList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
@@ -223,7 +236,7 @@
 
 <ng-template #inputTaskFormCodedList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormCodedList" novalidate (ngSubmit)="addTask(codedList, createTaskFormCodedList.value.taskTitle, createTaskFormCodedList.value.taskText)"
+    <form [formGroup]="createTaskFormCodedList" novalidate (ngSubmit)="addTask(codedList, createTaskFormCodedList.value.taskTitle, createTaskFormCodedList.value.taskText, createTaskFormCodedList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
@@ -249,7 +262,7 @@
 
 <ng-template #inputTaskFormTestingList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList.value.taskText)"
+    <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList.value.taskText, createTaskFormTestingList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
@@ -275,7 +288,7 @@
 
 <ng-template #inputTaskFormDoneList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormDoneList" novalidate (ngSubmit)="addTask(doneList, createTaskFormDoneList.value.taskTitle, createTaskFormDoneList.value.taskText)"
+    <form [formGroup]="createTaskFormDoneList" novalidate (ngSubmit)="addTask(doneList, createTaskFormDoneList.value.taskTitle, createTaskFormDoneList.value.taskText, createTaskFormDoneList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
@@ -298,3 +311,21 @@
     <button type="button" class="add-task-button" (click)="addTaskStatusToggle(doneList)">Add task</button>
   </div>
 </ng-template>
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
