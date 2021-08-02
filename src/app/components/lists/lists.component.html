@@ -316,15 +316,32 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Found tasks</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        <div class="modal-window" *ngIf="foundTasks != 0; then modalWindowHaveTasks else modalWindowNoTasks"></div>
+
+        <ng-template #modalWindowHaveTasks>
+          <div class="container-fluid">
+              <div class="modal-tasks-block" *ngFor="let item of foundTasks">
+                <div class="row modal-tasks-item">
+                  <div class="modal-window-task-list-name">List name: {{item.listName}}</div>
+                  <div class="modal-window-task-title">Task title: {{item.taskTitle}}</div>
+                <div class="modal-window-task-text">Task text: {{item.taskText}}</div>
+                </div>
+              </div>
+          </div>
+        </ng-template>
+
+        <ng-template #modalWindowNoTasks>
+          <div class="container-fluid">
+            <div class="row modal-no-tasks">No tasks found!</div>
+          </div>
+        </ng-template>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

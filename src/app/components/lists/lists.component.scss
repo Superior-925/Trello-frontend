@@ -98,6 +98,36 @@
   margin-left: 1rem;
 }
 
+.modal-tasks-block {
+  margin: 1rem 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.modal-tasks-item {
+  border: 2mm ridge rgba(67, 77, 250, 1);
+  border-radius: 5px;
+}
+
+.modal-window-task-list-name {
+  margin: 0.5rem 1rem 0.5rem 1rem;
+  text-decoration: underline;
+}
+
+.modal-window-task-title {
+  margin: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.modal-window-task-text {
+  font-weight: bold;
+  margin: 0 1rem 0.5rem 1rem;
+}
+
+.modal-no-tasks {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 // drag and drop styles
 
 .draggable-container {

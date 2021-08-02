@@ -1,0 +1,29 @@
+
+
+<div class="container main-container">
+<div class="card text-center">
+  <div class="card-header">
+  </div>
+  <div class="card-body">
+    <h5 class="card-title link-title">Join the board by invitation?</h5>
+    <button type="button" class="btn btn-primary" (click)="invite()">Yes</button>
+    <button type="button" class="btn btn-primary no-button" (click)="goToHome()">No</button>
+    <div class="popup-block" *ngIf="toggleForAuthorized">
+      <div class="popup-message">
+        You have successfully joined!
+      </div>
+        <button type="button" class="btn btn-primary go-to-login-button" (click)="goToWorkspace()">Go to workspace</button>
+
+    </div>
+    <div class="popup-block" *ngIf="toggleForNotAuthorized">
+      <div class="popup-message">
+        You are not authorized. Log in and follow the link again.
+      </div>
+        <button type="button" class="btn btn-primary go-to-login-button" (click)="goToLogin()">Go to login page</button>
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+  </div>
+</div>
+</div>
+

@@ -17,6 +17,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from "@angular/common/http";
 import { ListsComponent } from './components/lists/lists.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { LinkPageComponent } from './components/link-page/link-page.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     SignupPageComponent,
     WorkspaceComponent,
     ListsComponent,
+    LinkPageComponent,
   ],
   imports: [
     BrowserModule,

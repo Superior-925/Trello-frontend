@@ -24,6 +24,8 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
 
   newBoardName: string = '';
 
+  boardLink: string = '';
+
   constructor(private boardService: BoardService, private authService: AuthService) {
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
@@ -85,4 +87,11 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
     this.boardId = id;
   }
 
+  inviteCreateLink($event: any) {
+    $event.preventDefault();
+    this.boardService.inviteCreateLink(this.boardId).subscribe((responseData: any) => {
+      this.boardLink = responseData.body;
+    });
+
+  }
 }

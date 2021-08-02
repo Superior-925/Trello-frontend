@@ -199,8 +199,8 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
     this.taskService.searchTask(this.boardId, taskTitle).subscribe((responseData: any) => {
       let foundTasks = JSON.parse(responseData.body);
       this.foundTasks = foundTasks;
-      console.log(foundTasks);
-      console.log(foundTasks.length);
+      console.log(this.foundTasks);
+      console.log(this.foundTasks.length);
 
     });
     formGroup.reset();
