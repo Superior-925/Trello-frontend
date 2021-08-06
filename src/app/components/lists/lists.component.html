@@ -1,4 +1,7 @@
+<div class="header">
+
 <nav class="navbar navbar-light bg-light search-form">
+  <div class="navbar-header">
   <div class="container-fluid">
     <form class="d-flex form-group" [formGroup]="searchTaskForm" novalidate (ngSubmit)="searchTask(searchTaskForm.value.taskTitle, searchTaskForm)">
       <div class="form-group">
@@ -9,7 +12,78 @@
       </div>
     </form>
   </div>
+
+  <div class="dropdown">
+    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+      Menu
+    </a>
+
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink dropdown-menu">
+      <div class="show-archive d-flex justify-content-center" >
+      <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#menu-modal" (click)="showArchivedTasks()">Show archived tasks</button>
+      </div>
+      <div class="actions-list d-flex justify-content-center mt-4">List of actions on tasks:</div>
+
+      <li><a class="dropdown-item" href="#">Action</a></li>
+      <li><a class="dropdown-item" href="#">Another action</a></li>
+      <li><a class="dropdown-item" href="#">Something else here</a></li>
+    </ul>
+  </div>
+  </div>
 </nav>
+
+  <div class="modal fade" id="menu-modal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="menuModalLabel">Archived tasks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-archived-block">
+
+
+          <div class="modal-window" *ngIf="archivedTasks.length != 0; then modalArchivedTasks else modalArchivedNoTasks"></div>
+
+          <ng-template #modalArchivedTasks>
+            <div class="restore-tasks-block">
+              <div class="restore-tasks-block-title">
+              Restore tasks to one of the lists:
+              </div>
+              <div class="list-for-restore-block d-flex justify-content-evenly mt-2">
+                <button type="button" class="btn btn-secondary" (click)="restoreTasks('To Do')">To Do</button>
+                <button type="button" class="btn btn-secondary" (click)="restoreTasks('In Progress')">In Progress</button>
+                <button type="button" class="btn btn-secondary" (click)="restoreTasks('Coded')">Coded</button>
+                <button type="button" class="btn btn-secondary" (click)="restoreTasks('Testing')">Testing</button>
+                <button type="button" class="btn btn-secondary" (click)="restoreTasks('Done')">Done</button>
+              </div>
+            </div>
+            <div class="container-fluid archived-tasks-container">
+              <div class="modal-tasks-block" *ngFor="let item of archivedTasks">
+                <div class="row modal-achived-tasks-item">
+                  <div class="modal-window-achived-task-list-name">List name: {{item.listName}}</div>
+                  <div class="modal-window-achived-task-title">Task title: {{item.taskTitle}}</div>
+                  <div class="modal-window-achived-task-text">Task text: {{item.taskText}}</div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template #modalArchivedNoTasks>
+            <div class="container-fluid">
+              <div class="row modal-no-tasks">No archived tasks!</div>
+            </div>
+          </ng-template>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <div cdkDropListGroup>
 <div class="wrapper">
@@ -673,7 +747,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="modal-window" *ngIf="foundTasks != 0; then modalWindowHaveTasks else modalWindowNoTasks"></div>
+        <div class="modal-window" *ngIf="foundTasks.length != 0; then modalWindowHaveTasks else modalWindowNoTasks"></div>
 
         <ng-template #modalWindowHaveTasks>
           <div class="container-fluid">

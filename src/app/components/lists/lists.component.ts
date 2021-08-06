@@ -56,6 +56,7 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
 
   taskExecutors: any = [];
 
+  archivedTasks: any = [];
 
   constructor(private taskService: TaskService, private boardService: BoardService, private modalService: NgbModal) {
     this.createTaskFormTodoList = new FormGroup({
@@ -275,7 +276,39 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         }
       });
     }
+  }
 
+  showArchivedTasks() {
+      this.taskService.loadArchivedTasks(this.boardId).subscribe((responseData: any) => {
+        console.log(JSON.parse(responseData.body));
+
+        let parseResponse = JSON.parse(responseData.body);
+        this.archivedTasks.length = 0;
+        for (let i = 0; i < parseResponse.length; i++) {
+          let newTask = new Task(parseResponse[i].listName, parseResponse[i].taskTitle, parseResponse[i].taskText, parseResponse[i].id);
+          this.archivedTasks.push(newTask);
+        }
+      });
+  }
+
+  restoreTasks(listName: string) {
+    //console.log(this.archivedTasks);
+    let restoreTasksArray: any = [];
+    this.archivedTasks.forEach((item: any) => restoreTasksArray.push(item.taskId));
+    //console.log(restoreTasksArray);
+    this.taskService.restoreTasks(listName, restoreTasksArray, this.boardId).subscribe((responseData: any) => {
+      console.log(responseData.body);
+      let responseBody = responseData.body;
+      responseBody.forEach((item: any) => {
+        let newTask = new Task(item.listName, item.taskTitle, item.taskText, item.id);
+        if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
+        if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
+        if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
+        if (newTask.listName == "Testing") {this.testingListTasks.push(newTask)}
+        if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
+      });
+
+    });
   }
 
 }

@@ -210,6 +210,29 @@
   }
 }
 
+.navbar-header{
+  display: flex;
+}
+
+.dropdown-menu{
+  width: 30rem;
+  padding: 1rem 1rem;
+}
+
+.modal-achived-tasks-item {
+  border: darkgray 1px solid;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.modal-body-archived-block {
+  background-color: rgb(235,236,240);
+}
+
+.restore-tasks-block-title{
+  font-size: 1.1rem;
+}
+
 // drag and drop styles
 
 .draggable-container {

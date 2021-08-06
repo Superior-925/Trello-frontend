@@ -102,6 +102,28 @@ export class TaskService {
 
     return this.http.patch(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
   }
+
+  loadArchivedTasks(boardId: number) {
+
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response',params: {param: boardId}, responseType: 'text'};
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/task/archive`, httpOptionsGet);
+
+  }
+
+  restoreTasks(listName: string, archivedTasks: any, boardId: number) {
+
+    let body: {} = {listName: listName, archivedTasks: archivedTasks, boardId: boardId};
+
+    let jsonBody = JSON.stringify(body);
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+
+    return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive`, jsonBody, httpOptions);
+
+  }
+
 }
 
 
