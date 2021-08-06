@@ -10,14 +10,16 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { SignupPageComponent } from './components/signup-page/signup-page.component';
 import { LoginPageComponent } from "./components/login-page/login-page.component";
 import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { LinkPageComponent } from './components/link-page/link-page.component';
+import { ListsComponent } from './components/lists/lists.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from "@angular/common/http";
-import { ListsComponent } from './components/lists/lists.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { LinkPageComponent } from './components/link-page/link-page.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -40,7 +42,9 @@ import { LinkPageComponent } from './components/link-page/link-page.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DragDropModule
+    DragDropModule,
+    MatDialogModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

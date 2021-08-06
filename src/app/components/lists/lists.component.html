@@ -14,7 +14,7 @@
 <div cdkDropListGroup>
 <div class="wrapper">
 
-    <div class="list-item ">
+    <div class="list-item">
       <div class="list-title d-flex justify-content-center">
         {{todoList}}
       </div>
@@ -28,170 +28,523 @@
           (cdkDropListDropped)="drop($event)">
           <div class="draggable-box" *ngFor="let item of todoListTasks" cdkDrag>
             <div class="task-wrapper">
-              <div class="form-group">
-                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
-                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>
-              </div>
+
+                <div class="task-title" (click)="open(modalTaskTodoList)">Title: {{item.taskTitle}}</div>
+
+                  <ng-template class="modal" #modalTaskTodoList let-modal>
+                    <div class="modal-header">
+                      <div class="modal-basic-task-title">
+                      <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                      <h6>In list: {{todoList}}</h6>
+                      </div>
+                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <h5>Description:</h5>
+                      <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
+                      <button type="button" class="btn btn-primary save-changes-button" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+
+                    <div class="add-executor-block">
+                      <div class="add-executor-block-title">
+                        Select the task executor among the board members:
+                      </div>
+                      <div class="add-executor-block-select">
+                        <div class="board-members" *ngFor="let member of boardMembers">
+                          <button class="member" (click)="selectExecutor(item.taskId, member.userId, boardId)">{{member.userEmail}}</button>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="executors-block-title">Task executors(click on the executor to remove him from the task):</div>
+                      <div class="executors-block-content">
+                      <div *ngFor="let executor of taskExecutors">
+                        <div *ngIf="item.taskId == executor.taskId">
+                          <div class="task-executor-items-block">
+                          <button class="task-executor-item" (click)="deleteExecutor(item.taskId, executor.userId)">
+                            {{executor.userEmail}}
+                          </button>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+                    </div>
+                  </ng-template>
+
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>
               </div>
             </div>
           </div>
         </div>
       </div>
+
 
       <div *ngIf="addTaskStatusTodoList; then addTaskButtonTodoList else inputTaskFormTodoList"></div>
       <div class="list-options">
         <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(todoListTasks)">Delete all tasks</button>
+        <button type="button" class="btn btn-secondary" (click)="archiveTasks(todoListTasks)">Archive tasks</button>
       </div>
     </div>
 
-    <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{inProgressList}}
-      </div>
-      <div class="dividing-line"></div>
 
-      <div class="draggable-container">
-        <div
-          cdkDropList
-          [cdkDropListData]="inProgressListTasks"
-          class="draggable-list"
-          (cdkDropListDropped)="drop($event)">
-          <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>
-            <div class="task-wrapper">
-              <div class="form-group">
-                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
-                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>
+  <div class="list-item">
+    <div class="list-title d-flex justify-content-center">
+      {{inProgressList}}
+    </div>
+    <div class="dividing-line"></div>
+
+    <div class="draggable-container">
+      <div
+        cdkDropList
+        [cdkDropListData]="inProgressListTasks"
+        class="draggable-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>
+          <div class="task-wrapper">
+
+            <div class="task-title" (click)="open(modalTaskProgressList)">Title: {{item.taskTitle}}</div>
+
+            <ng-template class="modal" #modalTaskProgressList let-modal>
+              <div class="modal-header">
+                <div class="modal-basic-task-title">
+                  <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                  <h6>In list: {{inProgressList}}</h6>
+                </div>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>
+              <div class="modal-body">
+                <h5>Description:</h5>
+                <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
+                <button type="button" class="btn btn-primary save-changes-button" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+
+
+                <div class="add-executor-block">
+                  <div class="add-executor-block-title">
+                    Select the task executor among the board members:
+                  </div>
+                  <div class="add-executor-block-select">
+                    <div class="board-members" *ngFor="let member of boardMembers">
+                      <button class="member" (click)="selectExecutor(item.taskId, member.userId, boardId)">{{member.userEmail}}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="executors-block-title">Task executors(click on the executor to remove him from the task):</div>
+                <div class="executors-block-content">
+                  <div *ngFor="let executor of taskExecutors">
+                    <div *ngIf="item.taskId == executor.taskId">
+                      <div class="task-executor-items-block">
+                        <button class="task-executor-item" (click)="deleteExecutor(item.taskId, executor.userId)">
+                          {{executor.userEmail}}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+              </div>
+            </ng-template>
+
+            <div class="options-block">
+              <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
             </div>
           </div>
         </div>
       </div>
-
-      <div *ngIf="addTaskStatusProgressList; then addTaskButtonProgressList else inputTaskFormProgressList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(inProgressListTasks)">Delete all tasks</button>
-      </div>
     </div>
 
-    <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{codedList}}
-      </div>
-      <div class="dividing-line"></div>
 
-      <div class="draggable-container">
-        <div
-          cdkDropList
-          [cdkDropListData]="codedListTasks"
-          class="draggable-list"
-          (cdkDropListDropped)="drop($event)">
-          <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>
-            <div class="task-wrapper">
-              <div class="form-group">
-                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
-                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>
+    <div *ngIf="addTaskStatusProgressList; then addTaskButtonProgressList else inputTaskFormProgressList"></div>
+    <div class="list-options">
+      <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(inProgressListTasks)">Delete all tasks</button>
+      <button type="button" class="btn btn-secondary" (click)="archiveTasks(inProgressListTasks)">Archive tasks</button>
+    </div>
+  </div>
+
+<!--    <div class="list-item">-->
+<!--      <div class="list-title d-flex justify-content-center">-->
+<!--        {{inProgressList}}-->
+<!--      </div>-->
+<!--      <div class="dividing-line"></div>-->
+
+<!--      <div class="draggable-container">-->
+<!--        <div-->
+<!--          cdkDropList-->
+<!--          [cdkDropListData]="inProgressListTasks"-->
+<!--          class="draggable-list"-->
+<!--          (cdkDropListDropped)="drop($event)">-->
+<!--          <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>-->
+<!--            <div class="task-wrapper">-->
+<!--              <div class="form-group">-->
+<!--                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>-->
+<!--                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>-->
+<!--              </div>-->
+<!--              <div class="options-block">-->
+<!--                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>-->
+<!--                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+  <div class="list-item">
+    <div class="list-title d-flex justify-content-center">
+      {{codedList}}
+    </div>
+    <div class="dividing-line"></div>
+
+    <div class="draggable-container">
+      <div
+        cdkDropList
+        [cdkDropListData]="codedListTasks"
+        class="draggable-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>
+          <div class="task-wrapper">
+
+            <div class="task-title" (click)="open(modalTaskCodedList)">Title: {{item.taskTitle}}</div>
+
+            <ng-template class="modal" #modalTaskCodedList let-modal>
+              <div class="modal-header">
+                <div class="modal-basic-task-title">
+                  <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                  <h6>In list: {{codedList}}</h6>
+                </div>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>
+              <div class="modal-body">
+                <h5>Description:</h5>
+                <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
+                <button type="button" class="btn btn-primary save-changes-button" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+
+
+                <div class="add-executor-block">
+                  <div class="add-executor-block-title">
+                    Select the task executor among the board members:
+                  </div>
+                  <div class="add-executor-block-select">
+                    <div class="board-members" *ngFor="let member of boardMembers">
+                      <button class="member" (click)="selectExecutor(item.taskId, member.userId, boardId)">{{member.userEmail}}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="executors-block-title">Task executors(click on the executor to remove him from the task):</div>
+                <div class="executors-block-content">
+                  <div *ngFor="let executor of taskExecutors">
+                    <div *ngIf="item.taskId == executor.taskId">
+                      <div class="task-executor-items-block">
+                        <button class="task-executor-item" (click)="deleteExecutor(item.taskId, executor.userId)">
+                          {{executor.userEmail}}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+              </div>
+            </ng-template>
+
+            <div class="options-block">
+              <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
             </div>
           </div>
         </div>
       </div>
-
-      <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else inputTaskFormCodedList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(codedListTasks)">Delete all tasks</button>
-      </div>
     </div>
 
-    <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{testingList}}
-      </div>
-      <div class="dividing-line"></div>
+          <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else inputTaskFormCodedList"></div>
+          <div class="list-options">
+            <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(codedListTasks)">Delete all tasks</button>
+            <button type="button" class="btn btn-secondary" (click)="archiveTasks(codedListTasks)">Archive tasks</button>
+          </div>
+        </div>
 
-      <div class="draggable-container">
-        <div
-          cdkDropList
-          [cdkDropListData]="testingListTasks"
-          class="draggable-list"
-          (cdkDropListDropped)="drop($event)">
-          <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>
-            <div class="task-wrapper">
-              <div class="form-group">
-                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
-                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>
+<!--    <div class="list-item">-->
+<!--      <div class="list-title d-flex justify-content-center">-->
+<!--        {{codedList}}-->
+<!--      </div>-->
+<!--      <div class="dividing-line"></div>-->
+
+<!--      <div class="draggable-container">-->
+<!--        <div-->
+<!--          cdkDropList-->
+<!--          [cdkDropListData]="codedListTasks"-->
+<!--          class="draggable-list"-->
+<!--          (cdkDropListDropped)="drop($event)">-->
+<!--          <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>-->
+<!--            <div class="task-wrapper">-->
+<!--              <div class="form-group">-->
+<!--                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>-->
+<!--                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>-->
+<!--              </div>-->
+<!--              <div class="options-block">-->
+<!--                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>-->
+<!--                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else inputTaskFormCodedList"></div>-->
+<!--      <div class="list-options">-->
+<!--        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(codedListTasks)">Delete all tasks</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+  <div class="list-item">
+    <div class="list-title d-flex justify-content-center">
+      {{testingList}}
+    </div>
+    <div class="dividing-line"></div>
+
+    <div class="draggable-container">
+      <div
+        cdkDropList
+        [cdkDropListData]="testingListTasks"
+        class="draggable-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>
+          <div class="task-wrapper">
+
+            <div class="task-title" (click)="open(modalTaskTestingList)">Title: {{item.taskTitle}}</div>
+
+            <ng-template class="modal" #modalTaskTestingList let-modal>
+              <div class="modal-header">
+                <div class="modal-basic-task-title">
+                  <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                  <h6>In list: {{testingList}}</h6>
+                </div>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>
+              <div class="modal-body">
+                <h5>Description:</h5>
+                <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
+                <button type="button" class="btn btn-primary save-changes-button" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+
+
+                <div class="add-executor-block">
+                  <div class="add-executor-block-title">
+                    Select the task executor among the board members:
+                  </div>
+                  <div class="add-executor-block-select">
+                    <div class="board-members" *ngFor="let member of boardMembers">
+                      <button class="member" (click)="selectExecutor(item.taskId, member.userId, boardId)">{{member.userEmail}}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="executors-block-title">Task executors(click on the executor to remove him from the task):</div>
+                <div class="executors-block-content">
+                  <div *ngFor="let executor of taskExecutors">
+                    <div *ngIf="item.taskId == executor.taskId">
+                      <div class="task-executor-items-block">
+                        <button class="task-executor-item" (click)="deleteExecutor(item.taskId, executor.userId)">
+                          {{executor.userEmail}}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+              </div>
+            </ng-template>
+
+            <div class="options-block">
+              <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
             </div>
           </div>
         </div>
       </div>
-
-      <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else inputTaskFormTestingList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(testingListTasks)">Delete all tasks</button>
-      </div>
     </div>
 
-    <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{doneList}}
-      </div>
-      <div class="dividing-line"></div>
+          <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else inputTaskFormTestingList"></div>
+          <div class="list-options">
+            <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(testingListTasks)">Delete all tasks</button>
+            <button type="button" class="btn btn-secondary" (click)="archiveTasks(testingListTasks)">Archive tasks</button>
+          </div>
+        </div>
 
-      <div class="draggable-container">
-        <div
-          cdkDropList
-          [cdkDropListData]="doneListTasks"
-          class="draggable-list"
-          (cdkDropListDropped)="drop($event)">
-          <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>
-            <div class="task-wrapper">
-              <div class="form-group">
-                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
-                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>
+<!--    <div class="list-item">-->
+<!--      <div class="list-title d-flex justify-content-center">-->
+<!--        {{testingList}}-->
+<!--      </div>-->
+<!--      <div class="dividing-line"></div>-->
+
+<!--      <div class="draggable-container">-->
+<!--        <div-->
+<!--          cdkDropList-->
+<!--          [cdkDropListData]="testingListTasks"-->
+<!--          class="draggable-list"-->
+<!--          (cdkDropListDropped)="drop($event)">-->
+<!--          <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>-->
+<!--            <div class="task-wrapper">-->
+<!--              <div class="form-group">-->
+<!--                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>-->
+<!--                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>-->
+<!--              </div>-->
+<!--              <div class="options-block">-->
+<!--                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>-->
+<!--                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else inputTaskFormTestingList"></div>-->
+<!--      <div class="list-options">-->
+<!--        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(testingListTasks)">Delete all tasks</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+  <div class="list-item">
+    <div class="list-title d-flex justify-content-center">
+      {{doneList}}
+    </div>
+    <div class="dividing-line"></div>
+
+    <div class="draggable-container">
+      <div
+        cdkDropList
+        [cdkDropListData]="doneListTasks"
+        class="draggable-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>
+          <div class="task-wrapper">
+
+            <div class="task-title" (click)="open(modalTaskDoneList)">Title: {{item.taskTitle}}</div>
+
+            <ng-template class="modal" #modalTaskDoneList let-modal>
+              <div class="modal-header">
+                <div class="modal-basic-task-title">
+                  <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                  <h6>In list: {{doneList}}</h6>
+                </div>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>
+              <div class="modal-body">
+                <h5>Description:</h5>
+                <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
+                <button type="button" class="btn btn-primary save-changes-button" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+
+
+                <div class="add-executor-block">
+                  <div class="add-executor-block-title">
+                    Select the task executor among the board members:
+                  </div>
+                  <div class="add-executor-block-select">
+                    <div class="board-members" *ngFor="let member of boardMembers">
+                      <button class="member" (click)="selectExecutor(item.taskId, member.userId, boardId)">{{member.userEmail}}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="executors-block-title">Task executors(click on the executor to remove him from the task):</div>
+                <div class="executors-block-content">
+                  <div *ngFor="let executor of taskExecutors">
+                    <div *ngIf="item.taskId == executor.taskId">
+                      <div class="task-executor-items-block">
+                        <button class="task-executor-item" (click)="deleteExecutor(item.taskId, executor.userId)">
+                          {{executor.userEmail}}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+              </div>
+            </ng-template>
+
+            <div class="options-block">
+              <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>
             </div>
           </div>
         </div>
       </div>
-
-      <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else inputTaskFormDoneList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(doneListTasks)">Delete all tasks</button>
-      </div>
     </div>
+
+          <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else inputTaskFormDoneList"></div>
+          <div class="list-options">
+            <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(doneListTasks)">Delete all tasks</button>
+            <button type="button" class="btn btn-secondary" (click)="archiveTasks(doneListTasks)">Archive tasks</button>
+          </div>
+        </div>
+
+<!--    <div class="list-item">-->
+<!--      <div class="list-title d-flex justify-content-center">-->
+<!--        {{doneList}}-->
+<!--      </div>-->
+<!--      <div class="dividing-line"></div>-->
+
+<!--      <div class="draggable-container">-->
+<!--        <div-->
+<!--          cdkDropList-->
+<!--          [cdkDropListData]="doneListTasks"-->
+<!--          class="draggable-list"-->
+<!--          (cdkDropListDropped)="drop($event)">-->
+<!--          <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>-->
+<!--            <div class="task-wrapper">-->
+<!--              <div class="form-group">-->
+<!--                <div class="task-title">Task title:<input type="text" class="form-control" [(ngModel)]="item.taskTitle" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>-->
+<!--                <div class="task-text">Task text:<input type="text" class="form-control" [(ngModel)]="item.taskText" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"/></div>-->
+<!--              </div>-->
+<!--              <div class="options-block">-->
+<!--                <button type="button" class="btn btn-primary btn-sm delete-task-button" (click)="deleteTask(item.taskId)">Delete task</button>-->
+<!--                <button type="button" class="btn btn-secondary btn-sm">Tap me</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else inputTaskFormDoneList"></div>-->
+<!--      <div class="list-options">-->
+<!--        <button type="button" class="btn btn-primary btn-sm" (click)="deleteAllTasks(doneListTasks)">Delete all tasks</button>-->
+<!--      </div>-->
+<!--    </div>-->
 
 </div>
 </div>
 
 <ng-template #inputTaskFormTodoList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormTodoList" novalidate (ngSubmit)="addTask(todoList, createTaskFormTodoList.value.taskTitle, createTaskFormTodoList.value.taskText, createTaskFormTodoList)"
+    <form [formGroup]="createTaskFormTodoList" novalidate (ngSubmit)="addTask(todoList, createTaskFormTodoList.value.taskTitle, createTaskFormTodoList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
-      </div>
+<!--      <div class="form-group">-->
+<!--        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>-->
+<!--      </div>-->
       <div class="form-group d-flex">
         <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormTodoList.invalid">
           Add task
@@ -210,14 +563,14 @@
 
 <ng-template #inputTaskFormProgressList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormProgressList" novalidate (ngSubmit)="addTask(inProgressList, createTaskFormProgressList.value.taskTitle, createTaskFormProgressList.value.taskText, createTaskFormProgressList)"
+    <form [formGroup]="createTaskFormProgressList" novalidate (ngSubmit)="addTask(inProgressList, createTaskFormProgressList.value.taskTitle, createTaskFormProgressList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
-      </div>
+<!--      <div class="form-group">-->
+<!--        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>-->
+<!--      </div>-->
       <div class="form-group d-flex">
         <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormProgressList.invalid">
           Add task
@@ -236,14 +589,14 @@
 
 <ng-template #inputTaskFormCodedList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormCodedList" novalidate (ngSubmit)="addTask(codedList, createTaskFormCodedList.value.taskTitle, createTaskFormCodedList.value.taskText, createTaskFormCodedList)"
+    <form [formGroup]="createTaskFormCodedList" novalidate (ngSubmit)="addTask(codedList, createTaskFormCodedList.value.taskTitle, createTaskFormCodedList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
-      </div>
+<!--      <div class="form-group">-->
+<!--        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>-->
+<!--      </div>-->
       <div class="form-group d-flex">
         <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormCodedList.invalid">
           Add task
@@ -262,14 +615,14 @@
 
 <ng-template #inputTaskFormTestingList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList.value.taskText, createTaskFormTestingList)"
+    <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
-      </div>
+<!--      <div class="form-group">-->
+<!--        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>-->
+<!--      </div>-->
       <div class="form-group d-flex">
         <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormTestingList.invalid">
           Add task
@@ -288,14 +641,14 @@
 
 <ng-template #inputTaskFormDoneList>
   <div class="add-task-block">
-    <form [formGroup]="createTaskFormDoneList" novalidate (ngSubmit)="addTask(doneList, createTaskFormDoneList.value.taskTitle, createTaskFormDoneList.value.taskText, createTaskFormDoneList)"
+    <form [formGroup]="createTaskFormDoneList" novalidate (ngSubmit)="addTask(doneList, createTaskFormDoneList.value.taskTitle, createTaskFormDoneList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
         <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>
-      </div>
+<!--      <div class="form-group">-->
+<!--        <input type="text" class="form-control task-text" formControlName="taskText" placeholder="Enter task text"/>-->
+<!--      </div>-->
       <div class="form-group d-flex">
         <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormDoneList.invalid">
           Add task

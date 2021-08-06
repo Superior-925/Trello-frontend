@@ -94,4 +94,13 @@ export class BoardService {
     return this.http.get(`http://${config.development.host}:${config.development.port}/board/invitation/` + link, httpOptionsGet);
   }
 
+  loadInvitedUsers(boardId: number) {
+    let httpOptionsGet: {} = {
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response', responseType: 'text'
+    };
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/board/invitation/users/` + boardId, httpOptionsGet);
+  }
+
 }

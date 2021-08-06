@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {TaskService} from "../../services/task.service";
+import {BoardService} from "../../services/board.service";
 import {AfterViewInit, OnChanges, OnInit, DoCheck} from "@angular/core";
 import {Task} from "../../interfaces/task";
+import {Executor} from "../../interfaces/executor";
 import {Input} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -12,7 +15,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   templateUrl: './lists.component.html',
   styleUrls: ['./lists.component.scss']
 })
-export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck {
+export class ListsComponent implements OnChanges, OnInit, DoCheck {
 
   todoList: string = 'To Do';
   inProgressList: string = 'In Progress';
@@ -47,44 +50,36 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
 
   foundTasks: any = [];
 
-  constructor(private taskService: TaskService) {
+  closeResult: string;
+
+  boardMembers: any = [];
+
+  taskExecutors: any = [];
+
+
+  constructor(private taskService: TaskService, private boardService: BoardService, private modalService: NgbModal) {
     this.createTaskFormTodoList = new FormGroup({
       taskTitle: new FormControl('', [
-        Validators.required
-      ]),
-      taskText: new FormControl('', [
         Validators.required
       ])
     });
     this.createTaskFormProgressList = new FormGroup({
       taskTitle: new FormControl('', [
         Validators.required
-      ]),
-      taskText: new FormControl('', [
-        Validators.required
       ])
     });
     this.createTaskFormCodedList = new FormGroup({
       taskTitle: new FormControl('', [
-        Validators.required
-      ]),
-      taskText: new FormControl('', [
         Validators.required
       ])
     });
     this.createTaskFormTestingList = new FormGroup({
       taskTitle: new FormControl('', [
         Validators.required
-      ]),
-      taskText: new FormControl('', [
-        Validators.required
       ])
     });
     this.createTaskFormDoneList = new FormGroup({
       taskTitle: new FormControl('', [
-        Validators.required
-      ]),
-      taskText: new FormControl('', [
         Validators.required
       ])
     });
@@ -93,11 +88,6 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
         Validators.required
       ])
     });
-  }
-
-  ngAfterViewInit(): void {
-    //console.log(this.boardId);
-    //this.taskService.loadTasks(this.workSpaceComponent.boardId).subscribe();
   }
 
   ngOnChanges(): void {
@@ -116,8 +106,21 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
       this.codedListTasks = this.boardTasks.filter((item:any) => item.listName == "Coded");
       this.testingListTasks = this.boardTasks.filter((item:any) => item.listName == "Testing");
       this.doneListTasks = this.boardTasks.filter((item:any) => item.listName == "Done");
-      //console.log(this.todoListTasks);
+      console.log(this.todoListTasks);
       //console.log(this.doneListTasks);
+    });
+    this.boardService.loadInvitedUsers(this.boardId).subscribe((responseData: any) => {
+      this.boardMembers = JSON.parse(responseData.body);
+      console.log(this.boardMembers);
+    });
+    this.taskService.loadExecutors(this.boardId).subscribe((responseData: any) => {
+      let parseResponse = JSON.parse(responseData.body);
+      console.log(this.taskExecutors);
+
+      for (let i = 0; i < parseResponse.length; i++) {
+        let newExecutor = new Executor(parseResponse[i].userId, parseResponse[i].userEmail, parseResponse[i].taskId);
+        this.taskExecutors.push(newExecutor)
+      }
     });
   }
 
@@ -138,9 +141,9 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
 
   }
 
-  addTask(listName: string, taskTitle: string, taskText: string, formGroup: any) {
+  addTask(listName: string, taskTitle: string, formGroup: any) {
 
-    this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, taskText)
+    this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle)
       .subscribe((responseData: any) => {
         let newTask = new Task(responseData.body.listName, responseData.body.taskTitle, responseData.body.taskText, responseData.body.id);
         if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
@@ -183,7 +186,7 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
   }
 
   deleteAllTasks(tasksArray: any) {
-    if(confirm("Are you sure to delete all tasks?")) {
+    if(confirm("Are you sure you want to delete all tasks in the list?")) {
       let idsForDelete: any = [];
       tasksArray.forEach((item: any) => idsForDelete.push(item.taskId));
       this.taskService.deleteAllTasks(idsForDelete).subscribe((responseData: any) => {
@@ -217,4 +220,64 @@ export class ListsComponent implements OnChanges, AfterViewInit, OnInit, DoCheck
     }
   }
 
+  open(content:any) {
+    this.modalService.open(content, { centered: true, scrollable: true, size: 'lg' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
+
+  selectExecutor(taskId: number, userId: number, boardId: number) {
+
+    let findExecutor = this.taskExecutors.find((item: any) => item.taskId == taskId && item.userId == userId);
+    if (findExecutor) {return}
+    else {
+    this.taskService.selectExecutor(taskId, userId, boardId).subscribe((responseData: any) => {
+      //console.log(this.taskExecutors);
+
+      //console.log(findExecutor);
+      let newExecutor = new Executor(responseData.body.user.id, responseData.body.user.email, responseData.body.task.id);
+      this.taskExecutors.push(newExecutor);
+      //console.log(this.taskExecutors);
+    })
+    }
+  }
+
+  deleteExecutor(taskId: number, userId: number) {
+    this.taskService.deleteExecutor(taskId, userId).subscribe((responseData: any) => {
+      // console.log(responseData.body);
+      // console.log(this.taskExecutors);
+      // console.log(responseData.body.taskexecutor.userId);
+      let newExecutorsArray = this.taskExecutors.filter((item:any) => item.taskId == responseData.body.taskexecutor.taskId && item.userId != responseData.body.taskexecutor.userId);
+      this.taskExecutors = newExecutorsArray;
+    });
+  }
+
+  archiveTasks(tasksArray: any) {
+    if(confirm("Are you sure you want to archive all the tasks in the list?")) {
+      console.log(tasksArray);
+      let idsForArchive: any = [];
+      tasksArray.forEach((item: any) => idsForArchive.push(item.taskId));
+      this.taskService.archiveTasks(idsForArchive).subscribe((responseData: any) => {
+        if (responseData.status == 200) {
+          tasksArray.length = 0;
+        }
+      });
+    }
+
+  }
+
 }
+
+

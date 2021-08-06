@@ -5,6 +5,7 @@
   border: solid 1px;
   border-radius:5px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  background: rgb(235,236,240);
 }
 
 .wrapper {
@@ -32,12 +33,13 @@
   width: 10rem;
   color:black;
   font-size: 1.1rem;
-  background-color: white;
+  background: rgb(235,236,240);
   border: none;
   border-radius: 3px;
   &:hover {
     background-color: #E4E3E2;
   }
+
 }
 
 .add-task-block {
@@ -60,9 +62,15 @@
 }
 
 .task-title {
-  margin: 0.5rem auto;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0.3rem;
+  margin: auto;
   width: 90%;
   font-weight: bold;
+  cursor: pointer;
+  border: solid 1px;
+  border-radius: 5px;
 }
 
 .task-text {
@@ -72,19 +80,21 @@
 }
 
 .task-wrapper {
-
-  border: thick double #32a1ce;
+  margin: auto;
+  padding-top: 0.5rem;
+  border: solid 1px darkgray;
   border-radius:5px;
 }
 
 .options-block {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .list-options {
-  justify-content: center;
+  justify-content: space-around;
   margin: -0.3rem auto 1rem auto;
   display: flex;
   width: 70%;
@@ -128,26 +138,98 @@
   font-weight: bold;
 }
 
+.task-title-modal {
+  font-size: 1.3rem;
+}
+
+.task-title-modal-input {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.save-changes-button {
+  margin-top: 1rem;
+}
+
+.add-executor-block {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.add-executor-block-title{
+  font-size: 1.3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.add-executor-block-select {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto;
+
+}
+
+.member {
+  padding: 0.5rem 0.5rem;
+  margin: 0 1rem;
+  border: solid 1px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #E4E3E2;
+  }
+}
+
+.modal-body {
+  padding-bottom: 10rem;
+}
+
+.executors-block-title {
+  display: flex;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.executors-block-content {
+  display: flex;
+  justify-content: center;
+}
+
+.task-executor-items-block {
+  //display: flex;
+  //justify-content: center;
+}
+
+.task-executor-item {
+  padding: 0.5rem 0.5rem;
+  margin: 0 1rem;
+  border: solid 1px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #E4E3E2;
+  }
+}
+
 // drag and drop styles
 
 .draggable-container {
   width: 400px;
   max-width: 100%;
-  margin: 0 1rem 0.5rem 0;
+  //margin: 0 1rem 0.5rem 0;
   display: inline-block;
   vertical-align: top;
 }
 
 .draggable-list {
   min-height: 60px;
-  background: white;
+  //background: rgb(235,236,240);
   border-radius: 4px;
   overflow: hidden;
   display: block;
 }
 
 .draggable-box {
-  margin: 0.5rem 0.1rem;
+  margin: 0.5rem;
   cursor: move;
   background: white;
 }
