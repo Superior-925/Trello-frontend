@@ -3,8 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {config} from 'config';
 import {User} from '../interfaces/user'
 import {HttpHeaders} from "@angular/common/http";
-import {Router} from "@angular/router";
-import {BoardService} from "./board.service";
 
 const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}), observe: 'response'};
 
@@ -12,7 +10,7 @@ const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'applicatio
 
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router, private boardService: BoardService){ }
+  constructor(private http: HttpClient){ }
 
   signUp(email: User, password: User){
 
@@ -21,39 +19,36 @@ export class AuthService {
     let jsonBody = JSON.stringify(body);
     console.log(jsonBody);
 
-    return this.http.post(`http://${config.development.host}:${config.development.port}/signup`, jsonBody, httpOptions)
-      .subscribe((responseData: any) => {
-        if (responseData.status == 200) {
-          this.router.navigate(['/workspace']);
-          localStorage.setItem('token', responseData.body.token);
-          localStorage.setItem('userId', responseData.body.id);
-        }
-      },
-      error => console.log(error));
-  }
+    return this.http.post(`http://${config.development.host}:${config.development.port}/signup`, jsonBody, httpOptions);
+
+  };
 
   logIn(email: User, password: User){
     const body = {email: email, password: password};
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post(`http://${config.development.host}:${config.development.port}/login`, jsonBody, httpOptions)
-      .subscribe((responseData: any) => {
-        if (responseData.status == 200) {
-          this.router.navigate(['/workspace']);
-        }
-        localStorage.setItem('token', responseData.body.token);
-        localStorage.setItem('userId', responseData.body.id);
+    return this.http.post(`http://${config.development.host}:${config.development.port}/login`, jsonBody, httpOptions);
 
-      },
-      error => console.log(error));
-  }
+  };
 
-  googleLogIn() {
-    return (
-      this.http.get(`http://${config.development.host}:${config.development.port}/login/google`)
-        .subscribe());
-  }
+  googleSignUp(email: string, provider: string) {
+
+    let body: {} = {email: email, provider: provider};
+    let jsonBody = JSON.stringify(body);
+
+    return this.http.post(`http://${config.development.host}:${config.development.port}/signup/google`, jsonBody, httpOptions);
+
+  };
+
+  googleLogIn(email: string) {
+
+    let body: {} = {email: email};
+    let jsonBody = JSON.stringify(body);
+
+     return this.http.post(`http://${config.development.host}:${config.development.port}/login/google`, jsonBody, httpOptions);
+
+  };
 
 }
 

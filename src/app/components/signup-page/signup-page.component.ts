@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import { SocialAuthService } from "angularx-social-login";
+import { GoogleLoginProvider } from "angularx-social-login";
+import { SocialUser } from "angularx-social-login";
+
 
 @Component({
   selector: 'app-signup-page',
@@ -14,7 +18,10 @@ export class SignupPageComponent {
 
   signUpForm : FormGroup;
 
-  constructor(private router: Router, private authService: AuthService){
+  user: SocialUser;
+  loggedIn: boolean;
+
+  constructor(private router: Router, private authService: AuthService, private socialAuthService: SocialAuthService){
     this.signUpForm = new FormGroup({
       email: new FormControl('', [
         Validators.email,
@@ -28,11 +35,14 @@ export class SignupPageComponent {
   }
 
   submit(){
-    this.authService.signUp(this.signUpForm.value.email, this.signUpForm.value.password);
-  }
-
-  googleAuth() {
-    console.log('Google authorization success')
+    this.authService.signUp(this.signUpForm.value.email, this.signUpForm.value.password).subscribe((responseData: any) => {
+        localStorage.setItem('token', responseData.body.token);
+        localStorage.setItem('userId', responseData.body.id);
+        if (responseData.status == 200) {
+          this.router.navigate(['/workspace']);
+        }
+      },
+      error => console.log(error));
   }
 
   goToLoginPage() {
@@ -41,6 +51,24 @@ export class SignupPageComponent {
 
   goToHomePage() {
     this.router.navigate(['/home']);
+  }
+
+  signupWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(() => {
+        this.socialAuthService.authState.subscribe((user) => {
+          this.user = user;
+          this.loggedIn = (user != null);
+          this.authService.googleSignUp(user.email, user.provider).subscribe((responseData: any) => {
+              localStorage.setItem('token', responseData.body.token);
+              localStorage.setItem('userId', responseData.body.id);
+              if (responseData.status == 200) {
+                this.router.navigate(['/workspace']);
+              }
+            },
+            error => console.log(error));
+        });
+      });
   }
 
 }

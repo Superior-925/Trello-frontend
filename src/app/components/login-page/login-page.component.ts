@@ -2,17 +2,24 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import { SocialAuthService } from "angularx-social-login";
+import { GoogleLoginProvider } from "angularx-social-login";
+import { SocialUser } from "angularx-social-login";
+import {OnInit} from "@angular/core";
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit{
 
   signUpForm : FormGroup;
 
-  constructor(private router: Router, private authService: AuthService){
+  user: SocialUser;
+  loggedIn: boolean;
+
+  constructor(private router: Router, private authService: AuthService, private socialAuthService: SocialAuthService){
     this.signUpForm = new FormGroup({
       email: new FormControl('', [
         Validators.email,
@@ -24,14 +31,21 @@ export class LoginPageComponent {
       ])
     });
   }
+  ngOnInit(): void {
 
-  submit(){
-    this.authService.logIn(this.signUpForm.value.email, this.signUpForm.value.password);
   }
 
-  googleAuth() {
-    console.log('Google authorization sucsecc')
-    this.authService.googleLogIn();
+  submit(){
+    this.authService.logIn(this.signUpForm.value.email, this.signUpForm.value.password).subscribe( (responseData: any) => {
+
+       localStorage.setItem('token', responseData.body.token);
+       localStorage.setItem('userId', responseData.body.id);
+
+      if (responseData.status == 200) {
+        this.router.navigate(['/workspace']);
+        }
+      },
+      error => console.log(error));
   }
 
   goToHomePage() {
@@ -41,5 +55,25 @@ export class LoginPageComponent {
   goToSignUpPage() {
     this.router.navigate(['/signup']);
   }
+
+  loginWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(() => {
+        this.socialAuthService.authState.subscribe((user) => {
+          this.user = user;
+          this.loggedIn = (user != null);
+          this.authService.googleLogIn(user.email).subscribe( (responseData: any) => {
+              localStorage.setItem('token', responseData.body.token);
+              localStorage.setItem('userId', responseData.body.id);
+
+              if (responseData.status == 200) {
+                this.router.navigate(['/workspace']);
+              }
+            },
+            error => console.log(error));
+        });
+      });
+  }
+
 
 }
