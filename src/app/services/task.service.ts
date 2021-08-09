@@ -53,7 +53,7 @@ export class TaskService {
   }
 
   deleteAllTasks(idsArray: object) {
-    console.log(idsArray);
+
 
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
       observe: 'response',params: {taskIds: idsArray}};
@@ -122,6 +122,25 @@ export class TaskService {
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive`, jsonBody, httpOptions);
+
+  }
+
+  loadActionsOfTasks(boardId: number): Observable<any> {
+
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response', responseType: 'text'};
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
+  }
+
+  loadBoardRigths(boardId: number) {
+
+    let httpOptionsGet: {} = {
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
+    };
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
 
   }
 

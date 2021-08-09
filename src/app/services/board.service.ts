@@ -10,6 +10,8 @@ export class BoardService {
 
   token: any = localStorage.getItem('token');
 
+  boardOwner: boolean;
+
   constructor(private http: HttpClient, private router: Router) {
   }
 
@@ -78,7 +80,6 @@ export class BoardService {
     let body: {} = {boardId: boardId, userId: localStorage.getItem('userId')};
 
     let jsonBody = JSON.stringify(body);
-    console.log(jsonBody);
 
     return this.http.post(`http://${config.development.host}:${config.development.port}/board/invitation`, jsonBody, httpOptions);
 
@@ -102,5 +103,18 @@ export class BoardService {
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/board/invitation/users/` + boardId, httpOptionsGet);
   }
+
+
+  loadBoardRigth(boardId: number) {
+
+    let httpOptionsGet: {} = {
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
+    };
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
+
+  }
+
 
 }

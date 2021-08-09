@@ -5,6 +5,8 @@ import {AuthService} from "../../services/auth.service";
 import {AfterViewInit} from "@angular/core";
 import {OnChanges} from "@angular/core";
 import {Board} from "../../interfaces/board";
+import {AfterViewChecked} from "@angular/core";
+import {DoCheck} from "@angular/core";
 
 @Component({
   selector: 'app-workspace',
@@ -12,7 +14,7 @@ import {Board} from "../../interfaces/board";
   styleUrls: ['./workspace.component.scss'],
 })
 
-export class WorkspaceComponent implements OnChanges, AfterViewInit{
+export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, AfterViewChecked, DoCheck{
 
   createBoardForm : FormGroup;
 
@@ -26,7 +28,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
 
   boardLink: string = '';
 
+  boardOwner: boolean;
+
   constructor(private boardService: BoardService, private authService: AuthService) {
+
+     // this.loadBoardRigths();
+
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
         Validators.required
@@ -41,21 +48,35 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
           this.boardName = this.userBoards[0].boardName;
           this.boardId = this.userBoards[0].boardId;
         }
-        // console.log(this.userBoards);
-        // console.log(this.boardId);
+        this.loadBoardRigth();
       },
       error => console.log(error));
+    //
   }
 
   ngOnChanges(): void {
     this.userBoards =[];
+    this.loadBoardRigth();
+    // this.loadBoardRigths();
+  }
+
+  ngOnInit(): void {
+     //this.loadBoardRigths();
+  }
+
+  ngAfterViewChecked(): void {
+    //this.loadBoardRigths();
+  }
+
+  ngDoCheck(): void {
+    //this.loadBoardRigths();
   }
 
   addBoard(){
     this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
         let newBoard = new Board(responseData.body.boardName, responseData.body.id);
         this.userBoards.push(newBoard);
-        console.log(this.userBoards);
+        this.selectNewBoard(responseData.body.id, responseData.body.boardName)
       },
       error => console.log(error));
     this.createBoardForm.reset();
@@ -75,9 +96,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
       this.boardService.deleteBoard(this.boardId).subscribe((responseData: any) => {
         let filterUserBoards = this.userBoards.filter((item:any) => item.boardId !== responseData.body);
         this.userBoards = filterUserBoards;
+        console.log(this.userBoards);
+
         if (this.userBoards.length) {
-        this.boardName = this.userBoards[0].boardName;}
+          this.selectNewBoard(this.userBoards[0].boardId, this.userBoards[0].boardName)}
         else {this.boardName = 'No boards'}
+
       });
     }
   }
@@ -85,6 +109,15 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
   selectBoard(id: number, board: string) {
     this.boardName = board;
     this.boardId = id;
+    this.loadBoardRigth();
+    // console.log("Board owner: " + this.boardOwner);
+  }
+
+  selectNewBoard(id: number, board: string) {
+    this.boardName = board;
+    this.boardId = id;
+    this.loadBoardRigth();
+    // console.log("Board owner: " + this.boardOwner);
   }
 
   inviteCreateLink($event: any) {
@@ -92,6 +125,14 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
     this.boardService.inviteCreateLink(this.boardId).subscribe((responseData: any) => {
       this.boardLink = responseData.body;
     });
+  };
 
+  loadBoardRigth() {
+    this.boardService.loadBoardRigth(this.boardId).subscribe((responseData: any) => {
+      let responseParse = JSON.parse(responseData.body);
+      this.boardOwner = responseParse.owner;
+      console.log("Board owner: " + this.boardOwner);
+    });
   }
+
 }
