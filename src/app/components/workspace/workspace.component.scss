@@ -17,6 +17,10 @@
 
 .rename-delete-block {
   display: flex;
+  @media (max-width: 575.98px) {
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
 }
 
 .rename-board-input {
@@ -42,3 +46,67 @@
 }
 
 
+
+.add-board-form{
+  @media (max-width: 575.98px) {
+    width: 12rem;
+  }
+}
+
+.add-board-navbar{
+  @media (max-width: 575.98px) {
+    margin-left: 1rem;
+  }
+}
+
+.select-board-dropdown{
+  @media (max-width: 575.98px) {
+    width: 10rem;
+  }
+}
+
+.nav-bar-add-rename-board{
+  @media (max-width: 575.98px) {
+    margin-bottom: 1rem;
+  }
+}
+
+.invite-participant{
+  @media (max-width: 575.98px) {
+    margin: 0.5rem auto;
+    border: solid 1px;
+    border-radius: 5px;
+    text-align:center
+  }
+}
+
+.nav-link-select-board{
+  @media (max-width: 575.98px) {
+    text-align: center;
+  }
+}
+
+.trello-logo{
+  @media (max-width: 575.98px) {
+    display: none;
+  }
+}
+
+.trello-logo-mobile {
+  @media (max-width: 575.98px) {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 575.98px) {
+    display: none;
+  }
+}
+
+.invite-link-wrapper{
+  @media (max-width: 575.98px) {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}

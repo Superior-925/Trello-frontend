@@ -2,8 +2,8 @@
   <div class="nav header-nav">
     <img src="assets/trello-logo.jpg" id="logo-id" alt="trello-logo">
     <div class="links">
-    <a (click)="goToLoginPage()" id="login-link">Log in</a>
-    <button type="button" (click)="goToSignupPage()" id="signup-button">Sign up</button>
+      <a (click)="goToLoginPage()" id="login-link">Log in</a>
+      <button type="button" (click)="goToSignupPage()" id="signup-button">Sign up</button>
     </div>
   </div>
 </header>
@@ -11,12 +11,13 @@
 <div class="content">
   <div class="container-xl">
     <div class="d-flex flex-column flex-lg-row align-items-center">
-      <div class="col-6"><h1 class="trello-info-title">Trello helps teams move work forward.</h1>
+
+      <div class="col"><h1 class="trello-info-title">Trello helps teams move work forward.</h1>
         <h5>Collaborate, manage projects, and reach new productivity peaks.
           From high rises to the home office, the way your team works is unique—accomplish it all with Trello.</h5>
         <button type="button" (click)="goToSignupPage()" id="text-block-sign-up-button">Sign up-it's free!</button>
       </div>
-      <div class="col-5"><img class="img-responsive mw-100" src="assets/hero.png" alt="trello-hero"></div>
+      <div class="col trello-image"><img class="img-responsive mw-100" src="assets/hero.png" alt="trello-hero"></div>
     </div>
   </div>
 </div>

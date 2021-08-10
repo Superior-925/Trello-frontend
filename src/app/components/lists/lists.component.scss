@@ -1,3 +1,44 @@
+.header{
+  @media (max-width: 575.98px) {
+   display: flex;
+    justify-content: center;
+  }
+  @media (min-width: 576px) {
+    margin-top: 0.5rem;
+  }
+}
+
+#dropdownMenuLink{
+  @media (max-width: 575.98px) {
+    margin-right: 0.8rem;
+  }
+}
+
+.dropdown-menu{
+  @media (max-width: 575.98px) {
+    margin-left: -250px;
+    max-width: 20rem
+  }
+  @media (min-width: 576px) {
+    margin-left: -250px;
+    max-width: 30rem
+  }
+}
+
+.restore-archive-button{
+  @media (max-width: 575.98px) {
+    margin-top: 0.5rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+  }
+}
+
+.list-for-restore-block{
+  @media (max-width: 575.98px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 
 .list-item {
   width: 19%;
@@ -6,13 +47,35 @@
   border-radius:5px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   background: rgb(235,236,240);
+  @media (max-width: 575.98px) {
+    width: 98%;
+    margin: 0.5rem auto;
+  }
+  @media (min-width: 576px) {
+    width: 98%;
+    margin: 0.5rem auto;
+  }
+  @media (min-width: 992px) {
+    margin: 3px;
+  }
 }
 
 .wrapper {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  flex-direction: row;
+
+  @media (max-width: 575.98px) {
+    display: flex;
+    flex-direction: column;
+  }
+  @media (min-width: 576px) {
+    display: flex;
+    flex-direction: column;
+  }
+  @media (min-width: 992px) {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-direction: row;
+  }
 }
 
 .list-title {
@@ -84,6 +147,7 @@
   padding-top: 0.5rem;
   border: solid 1px darkgray;
   border-radius:5px;
+
 }
 
 .options-block {
@@ -200,10 +264,6 @@
   justify-content: center;
 }
 
-.task-executor-items-block {
-  //display: flex;
-  //justify-content: center;
-}
 
 .task-executor-item {
   padding: 0.5rem 0.5rem;
@@ -266,26 +326,40 @@
 }
 
 .log-out-button{
-  margin-right: 3.5rem;
+  @media (min-width: 992px) {
+    margin-right: 3.5rem;
+  }
+  @media (max-width: 575.98px) {
+
+  width: 15rem;
+  font-size: 1.2rem;
+   }
+
+}
+
+.log-out-button-block{
+  @media (max-width: 575.98px) {
+    margin: 0.5rem auto;
+  }
 }
 
 // drag and drop styles
 
 .draggable-container {
-  width: 400px;
+  width: 100%;
   max-width: 100%;
-  //margin: 0 1rem 0.5rem 0;
   display: inline-block;
   vertical-align: top;
 }
 
 .draggable-list {
   min-height: 60px;
-  //background: rgb(235,236,240);
   border-radius: 4px;
   overflow: hidden;
   display: block;
+
 }
+
 
 .draggable-box {
   margin: 0.5rem;
@@ -317,4 +391,3 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-//

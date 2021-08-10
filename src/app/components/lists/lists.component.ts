@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {TaskService} from "../../services/task.service";
 import {BoardService} from "../../services/board.service";
-import {AfterViewInit, OnChanges, OnInit, DoCheck} from "@angular/core";
+import {OnChanges} from "@angular/core";
 import {Task} from "../../interfaces/task";
 import {Executor} from "../../interfaces/executor";
 import {Input} from '@angular/core';
@@ -16,7 +16,7 @@ import {Router} from "@angular/router";
   templateUrl: './lists.component.html',
   styleUrls: ['./lists.component.scss']
 })
-export class ListsComponent implements OnChanges, OnInit, DoCheck {
+export class ListsComponent implements OnChanges{
 
   todoList: string = 'To Do';
   inProgressList: string = 'In Progress';
@@ -114,10 +114,12 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
       this.testingListTasks = this.boardTasks.filter((item:any) => item.listName == "Testing");
       this.doneListTasks = this.boardTasks.filter((item:any) => item.listName == "Done");
 
-    });
+    },
+      error => console.log(error));
     this.boardService.loadInvitedUsers(this.boardId).subscribe((responseData: any) => {
       this.boardMembers = JSON.parse(responseData.body);
-    });
+    },
+      error => console.log(error));
     this.taskService.loadExecutors(this.boardId).subscribe((responseData: any) => {
       let parseResponse = JSON.parse(responseData.body);
       this.taskExecutors.length = 0;
@@ -125,16 +127,10 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         let newExecutor = new Executor(parseResponse[i].userId, parseResponse[i].userEmail, parseResponse[i].taskId);
         this.taskExecutors.push(newExecutor)
       }
-    });
+    },
+      error => console.log(error));
     this.loadBoardRigths();
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngDoCheck(): void {
-
-  }
+  };
 
   addTaskStatusToggle(listTitle: string) {
     if(listTitle == this.todoList) this.addTaskStatusTodoList = !this.addTaskStatusTodoList;
@@ -142,11 +138,9 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
     if(listTitle == this.codedList) this.addTaskStatusCodedList = !this.addTaskStatusCodedList;
     if(listTitle == this.testingList) this.addTaskStatusTestingList = !this.addTaskStatusTestingList;
     if(listTitle == this.doneList) this.addTaskStatusDoneList = !this.addTaskStatusDoneList;
-
-  }
+  };
 
   addTask(listName: string, taskTitle: string, formGroup: any) {
-
     this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle)
       .subscribe((responseData: any) => {
         let newTask = new Task(responseData.body.listName, responseData.body.taskTitle, responseData.body.taskText, responseData.body.id);
@@ -155,10 +149,10 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
         if (newTask.listName == "Testing") {this.testingListTasks.push(newTask)}
         if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
-      });
+      },
+        error => console.log(error));
     formGroup.reset();
-
-  }
+  };
 
   deleteTask(taskId: number) {
 
@@ -179,15 +173,16 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
       let newDoneListTasks = this.doneListTasks.filter((item: any) => item.taskId != responseData.body);
       this.doneListTasks = newDoneListTasks;
 
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   renameTaskTitleOrText(taskId: number, taskTitle: any, taskText: any) {
 
     this.taskService.renameTask(taskId, taskTitle, taskText).subscribe((responseData: any) => {
-
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   deleteAllTasks(tasksArray: any) {
     if(confirm("Are you sure you want to delete all tasks in the list?")) {
@@ -197,18 +192,19 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         if (responseData.status == 200) {
           tasksArray.length = 0;
         }
-      });
+      },
+        error => console.log(error));
     }
-  }
+  };
 
   searchTask(taskTitle: string, formGroup: any) {
     this.taskService.searchTask(this.boardId, taskTitle).subscribe((responseData: any) => {
       let foundTasks = JSON.parse(responseData.body);
       this.foundTasks = foundTasks;
-
-    });
+    },
+      error => console.log(error));
     formGroup.reset();
-  }
+  };
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -219,7 +215,7 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         event.previousIndex,
         event.currentIndex);
     }
-  }
+  };
 
   open(content:any) {
     this.modalService.open(content, { centered: true, scrollable: true, size: 'lg' }).result.then((result) => {
@@ -227,7 +223,7 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-  }
+  };
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -237,7 +233,7 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
     } else {
       return  `with: ${reason}`;
     }
-  }
+  };
 
   selectExecutor(taskId: number, userId: number, boardId: number) {
 
@@ -245,14 +241,12 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
     if (findExecutor) {return}
     else {
     this.taskService.selectExecutor(taskId, userId, boardId).subscribe((responseData: any) => {
-
-
       let newExecutor = new Executor(responseData.body.user.id, responseData.body.user.email, responseData.body.task.id);
       this.taskExecutors.push(newExecutor);
-
-    })
+    },
+      error => console.log(error))
     }
-  }
+  };
 
   deleteExecutor(taskId: number, userId: number) {
     this.taskService.deleteExecutor(taskId, userId).subscribe((responseData: any) => {
@@ -262,8 +256,9 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
           break;
         }
       }
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   archiveTasks(tasksArray: any) {
     if(confirm("Are you sure you want to archive all the tasks in the list?")) {
@@ -273,9 +268,10 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         if (responseData.status == 200) {
           tasksArray.length = 0;
         }
-      });
+      },
+        error => console.log(error));
     }
-  }
+  };
 
   showArchivedTasks() {
       this.taskService.loadArchivedTasks(this.boardId).subscribe((responseData: any) => {
@@ -286,8 +282,9 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
           let newTask = new Task(parseResponse[i].listName, parseResponse[i].taskTitle, parseResponse[i].taskText, parseResponse[i].id);
           this.archivedTasks.push(newTask);
         }
-      });
-  }
+      },
+        error => console.log(error));
+  };
 
   restoreTasks(listName: string) {
     let restoreTasksArray: any = [];
@@ -303,29 +300,32 @@ export class ListsComponent implements OnChanges, OnInit, DoCheck {
         if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
       });
 
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   loadBoardRigths() {
     this.taskService.loadBoardRigths(this.boardId).subscribe((responseData: any) => {
       let responseParse = JSON.parse(responseData.body);
       this.boardOwner = responseParse.owner;
-    })
-  }
+    },
+      error => console.log(error))
+  };
 
   loadActionsOfTasks() {
     this.taskService.loadActionsOfTasks(this.boardId).subscribe((responseData: any) => {
       this.taskActions.length = 0;
       this.taskActions = JSON.parse(responseData.body);
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   logOut() {
     if(confirm("Are you sure you want to log out?")) {
       localStorage.clear();
       this.router.navigate(['/home']);
     }
-  }
+  };
 
 }
 

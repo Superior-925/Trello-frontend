@@ -36,7 +36,6 @@ export class LinkPageComponent implements OnInit {
         console.log(responseData.status);
         if (responseData.status == 200) {
           this.toggleForAuthorized = true;
-          //this.router.navigate(['/workspace']);
         }
       });
     }

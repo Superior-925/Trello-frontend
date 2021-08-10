@@ -1,10 +1,11 @@
 <header>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="trello-logo-mobile"><img src="assets/trello-logo.jpg" alt="" width="120"></div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-bar-add-rename-board">
   <div class="container-fluid">
     <div class="add-board-form">
       <form [formGroup]="createBoardForm" novalidate (ngSubmit)="addBoard()" class="d-flex align-items-center">
       <div class="form-group">
-        <input type="text" class="form-control" formControlName="board" placeholder="Enter board name"/>
+        <input type="text" class="form-control add-board-form" formControlName="board" placeholder="Enter board name"/>
       </div>
       <div class="form-group d-flex">
         <button class="btn btn-default btn btn-primary btn-lg btn-block" id="submit-button" [disabled]="createBoardForm.invalid">
@@ -13,16 +14,16 @@
       </div>
     </form>
     </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler add-board-navbar" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#board-link" [ngClass]="{invisible: !boardOwner}" (click)="inviteCreateLink($event)">Invite a participant</a>
+          <a class="nav-link active invite-participant" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#board-link" [ngClass]="{invisible: !boardOwner}" (click)="inviteCreateLink($event)">Invite a participant</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle nav-link-select-board" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Select board
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" *ngIf="userBoards.length; then haveBoards else noBoards">
@@ -36,7 +37,7 @@
         </div>
       </ul>
 
-      <nav class="navbar navbar-light bg-light">
+      <nav class="navbar navbar-light bg-light trello-logo">
         <div class="container">
           <a class="navbar-brand" href="#">
             <img src="assets/trello-logo.jpg" alt="" width="120">
@@ -74,7 +75,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body invite-link">
+        <div class="invite-link-wrapper">
         {{boardLink}}
+        </div>
         <div>Submit this link to invite the user to the board.</div>
       </div>
       <div class="modal-footer">

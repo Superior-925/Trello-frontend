@@ -1,12 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {BoardService} from "../../services/board.service";
-import {AuthService} from "../../services/auth.service";
 import {AfterViewInit} from "@angular/core";
 import {OnChanges} from "@angular/core";
 import {Board} from "../../interfaces/board";
-import {AfterViewChecked} from "@angular/core";
-import {DoCheck} from "@angular/core";
 
 @Component({
   selector: 'app-workspace',
@@ -14,7 +11,7 @@ import {DoCheck} from "@angular/core";
   styleUrls: ['./workspace.component.scss'],
 })
 
-export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, AfterViewChecked, DoCheck{
+export class WorkspaceComponent implements OnChanges, AfterViewInit{
 
   createBoardForm : FormGroup;
 
@@ -30,9 +27,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, Aft
 
   boardOwner: boolean;
 
-  constructor(private boardService: BoardService, private authService: AuthService) {
-
-     // this.loadBoardRigths();
+  constructor(private boardService: BoardService) {
 
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
@@ -51,26 +46,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, Aft
         this.loadBoardRigth();
       },
       error => console.log(error));
-    //
-  }
+  };
 
   ngOnChanges(): void {
     this.userBoards =[];
     this.loadBoardRigth();
-    // this.loadBoardRigths();
-  }
-
-  ngOnInit(): void {
-     //this.loadBoardRigths();
-  }
-
-  ngAfterViewChecked(): void {
-    //this.loadBoardRigths();
-  }
-
-  ngDoCheck(): void {
-    //this.loadBoardRigths();
-  }
+  };
 
   addBoard(){
     this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
@@ -80,15 +61,16 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, Aft
       },
       error => console.log(error));
     this.createBoardForm.reset();
-  }
+  };
 
   renameBoard() {
     this.boardService.renameBoard(this.boardId, this.newBoardName).subscribe((responseData: any) => {
       this.userBoards.forEach(function(item: any){
         if (item.boardId == responseData.body.id) {item.boardName = responseData.body.boardName}
       });
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
   deleteBoard() {
 
@@ -96,43 +78,42 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit, Aft
       this.boardService.deleteBoard(this.boardId).subscribe((responseData: any) => {
         let filterUserBoards = this.userBoards.filter((item:any) => item.boardId !== responseData.body);
         this.userBoards = filterUserBoards;
-        console.log(this.userBoards);
 
         if (this.userBoards.length) {
           this.selectNewBoard(this.userBoards[0].boardId, this.userBoards[0].boardName)}
         else {this.boardName = 'No boards'}
 
-      });
+      },
+        error => console.log(error));
     }
-  }
+  };
 
   selectBoard(id: number, board: string) {
     this.boardName = board;
     this.boardId = id;
     this.loadBoardRigth();
-    // console.log("Board owner: " + this.boardOwner);
-  }
+  };
 
   selectNewBoard(id: number, board: string) {
     this.boardName = board;
     this.boardId = id;
     this.loadBoardRigth();
-    // console.log("Board owner: " + this.boardOwner);
-  }
+  };
 
   inviteCreateLink($event: any) {
     $event.preventDefault();
     this.boardService.inviteCreateLink(this.boardId).subscribe((responseData: any) => {
       this.boardLink = responseData.body;
-    });
+    },
+      error => console.log(error));
   };
 
   loadBoardRigth() {
     this.boardService.loadBoardRigth(this.boardId).subscribe((responseData: any) => {
       let responseParse = JSON.parse(responseData.body);
       this.boardOwner = responseParse.owner;
-      console.log("Board owner: " + this.boardOwner);
-    });
-  }
+    },
+      error => console.log(error));
+  };
 
 }

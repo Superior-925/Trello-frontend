@@ -68,6 +68,24 @@ a {
 
 .trello-info-title {
   font-size: 3em;
+  @media (max-width: 576px) {
+    font-size: 2rem;
+    width: 100%;
+  }
+}
+
+.trello-image {
+  @media (max-width: 576px) {
+    margin-top: 3rem;
+  }
+}
+
+.title-block-title{
+  @media (max-width: 576px) {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
 }
 
 #text-block-sign-up-button {
@@ -83,6 +101,9 @@ a {
   color: white;
   &:hover {
     background-color: #0051CC;
+  }
+  @media (max-width: 576px) {
+    margin-top: 3rem;
   }
 }
 
