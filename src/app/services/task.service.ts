@@ -14,11 +14,11 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  addTask(userId: string, boardId: number, listName: string, taskTitle: string) {
+  addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number) {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
 
-    let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle};
+    let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order};
     let jsonBody = JSON.stringify(body);
 
     return this.http.post(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
@@ -144,15 +144,26 @@ export class TaskService {
 
   }
 
-  taskChangeList(taskId: number, listName: string) {
+  taskChangeList(task: any, taskId: number) {
 
-    let body: {} = {listName: listName};
+    let body: {} = {task};
 
     let jsonBody = JSON.stringify(body);
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task/list` + taskId, jsonBody, httpOptions);
+  }
+
+  taskOrder(taskId: number, taskOrder: number) {
+
+    let body: {} = {taskOrder: taskOrder};
+
+    let jsonBody = JSON.stringify(body);
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+
+    return this.http.put(`http://${config.development.host}:${config.development.port}/task/order` + taskId, jsonBody, httpOptions);
   }
 
 }

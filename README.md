@@ -1,4 +1,5 @@
 #  Trello-clone application(client side)
+![](./trello-home-example.png)
 
 ![](./example-screenshot.png)
 
@@ -51,6 +52,8 @@ The application is written by HTML/CSS/TypeScript/Angular
  ```sh
 $ npm start
 ```
+
+- Go to the following link http://localhost:4200
 
 If you have questions - contact me on email skykeeper925@gmail.com.
 Best regards Antony Logunov.
