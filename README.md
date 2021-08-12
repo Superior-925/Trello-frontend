@@ -1,27 +1,56 @@
-# TrelloFrontend
+#  Trello-clone application(client side)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.0.
+![](./example-screenshot.png)
 
-## Development server
+# This Trello-clone app is an example of a kanban-board.
+The app allows:
+- Сreate boards
+- Delete boards
+- Rename boards
+- Add tasks to board
+- Delete tasks or task
+- Rename tasks(title or text)
+- Move tasks on the board
+- Archive and restore tasks
+- View archived tasks
+- Search for tasks on the board
+- View the history of actions on board tasks
+- Invite other app users to the board
+- Assign task executor to users who have been invited to the board
+- Remove the task from the executor
+- The invited user has the right only to view tasks and the ability to exit the task if he is the executor
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Application Technology Stack
 
-## Code scaffolding
+The application is written by HTML/CSS/TypeScript/Angular
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# To launch the app, you need to:
 
-## Build
+ Open terminal and follow the next commands:
+ 
+ - Clone the repository
+ 
+  ```sh
+  $ git clone https://github.com/Superior-925/Trello-frontend.git
+  ```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- Go to project folder
 
-## Running unit tests
+```sh
+ $ cd Trello-frontend
+  ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Install dependencies by NPM
+ 
+ ```
+ $ npm install
+```
 
-## Running end-to-end tests
+- Launch the applications
+ 
+ ```sh
+$ npm start
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+If you have questions - contact me on email skykeeper925@gmail.com.
+Best regards Antony Logunov.

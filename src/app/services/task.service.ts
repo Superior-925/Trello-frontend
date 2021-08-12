@@ -144,6 +144,17 @@ export class TaskService {
 
   }
 
+  taskChangeList(taskId: number, listName: string) {
+
+    let body: {} = {listName: listName};
+
+    let jsonBody = JSON.stringify(body);
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+
+    return this.http.put(`http://${config.development.host}:${config.development.port}/task/list` + taskId, jsonBody, httpOptions);
+  }
+
 }
 
 

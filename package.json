@@ -1,6 +1,7 @@
 {
   "name": "trello-frontend",
   "version": "1.0.0",
+  "description": "Trello app client side based on Angular",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

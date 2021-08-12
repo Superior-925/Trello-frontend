@@ -21,7 +21,7 @@
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink dropdown-menu dropdown-menu-block">
           <div class="show-archive d-flex justify-content-center" >
-            <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#menu-modal" (click)="showArchivedTasks()">Show archived tasks</button>
+            <button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#menu-modal" [ngClass]="{invisible: !boardOwner}" (click)="showArchivedTasks()">Show archived tasks</button>
           </div>
           <div class="actions-list d-flex justify-content-center mt-4">List of action histories on tasks:</div>
           <div class="modal-window" *ngIf="taskActions.length != 0; then haveActionsHistory else notHaveActionsHistory"></div>
@@ -119,7 +119,7 @@
           cdkDropList
           [cdkDropListData]="todoListTasks"
           class="draggable-list movable-list"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, todoList)">
           <div class="draggable-box" *ngFor="let item of todoListTasks" cdkDrag>
             <div class="task-wrapper">
 
@@ -222,7 +222,7 @@
           cdkDropList
           [cdkDropListData]="inProgressListTasks"
           class="draggable-list movable-list"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, inProgressList)">
           <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>
             <div class="task-wrapper">
 
@@ -326,7 +326,7 @@
           cdkDropList
           [cdkDropListData]="codedListTasks"
           class="draggable-list movable-list"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, codedList)">
           <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>
             <div class="task-wrapper">
 
@@ -428,7 +428,7 @@
           cdkDropList
           [cdkDropListData]="testingListTasks"
           class="draggable-list movable-list"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, testingList)">
           <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>
             <div class="task-wrapper">
 
@@ -530,7 +530,7 @@
           cdkDropList
           [cdkDropListData]="doneListTasks"
           class="draggable-list movable-list"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, doneList)">
           <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>
             <div class="task-wrapper">
 

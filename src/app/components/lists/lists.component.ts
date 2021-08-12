@@ -206,16 +206,93 @@ export class ListsComponent implements OnChanges{
     formGroup.reset();
   };
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: any, listName: string) {
+    let todoArray = this.todoListTasks;
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      //console.log(this.todoListTasks);
     } else {
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
+
+      if(listName == 'To Do') {
+        let tasksArray = event.container.data;
+        let taskChangeList = tasksArray.find((item: any) => item.listName != listName);
+        this.changeTaskList(taskChangeList.taskId, listName);
+      }
+
+      if(listName == 'In Progress') {
+        let tasksArray = event.container.data;
+        let taskChangeList = tasksArray.find((item: any) => item.listName != listName);
+        this.changeTaskList(taskChangeList.taskId, listName);
+      }
+
+      if(listName == 'Coded') {
+        let tasksArray = event.container.data;
+        let taskChangeList = tasksArray.find((item: any) => item.listName != listName);
+        this.changeTaskList(taskChangeList.taskId, listName);
+      }
+
+      if(listName == 'Testing') {
+        let tasksArray = event.container.data;
+        let taskChangeList = tasksArray.find((item: any) => item.listName != listName);
+        this.changeTaskList(taskChangeList.taskId, listName);
+      }
+
+      if(listName == 'Done') {
+        let tasksArray = event.container.data;
+        let taskChangeList = tasksArray.find((item: any) => item.listName != listName);
+        this.changeTaskList(taskChangeList.taskId, listName);
+      }
+
     }
   };
+
+  changeTaskList(taskId: number, listName: string) {
+
+    this.taskService.taskChangeList(taskId, listName).subscribe((responseData: any) => {
+
+      if (responseData.body.listName == 'To Do') {
+        this.todoListTasks.forEach((item:any) => {
+          if (item.taskId == responseData.body.id) {item.listName = responseData.body.listName}
+        });
+        console.log(this.todoListTasks);
+      }
+
+      if (responseData.body.listName == 'In Progress') {
+        this.inProgressListTasks.forEach((item:any) => {
+          if (item.taskId == responseData.body.id) {item.listName = responseData.body.listName}
+        });
+        console.log(this.inProgressListTasks);
+      }
+
+      if (responseData.body.listName == 'Coded') {
+        this.codedListTasks.forEach((item:any) => {
+          if (item.taskId == responseData.body.id) {item.listName = responseData.body.listName}
+        });
+        console.log(this.codedListTasks);
+      }
+
+      if (responseData.body.listName == 'Testing') {
+        this.testingListTasks.forEach((item:any) => {
+          if (item.taskId == responseData.body.id) {item.listName = responseData.body.listName}
+        });
+        console.log(this.testingListTasks);
+      }
+
+      if (responseData.body.listName == 'Done') {
+        this.doneListTasks.forEach((item:any) => {
+          if (item.taskId == responseData.body.id) {item.listName = responseData.body.listName}
+        });
+        console.log(this.doneListTasks);
+      }
+
+
+    });
+  }
 
   open(content:any) {
     this.modalService.open(content, { centered: true, scrollable: true, size: 'lg' }).result.then((result) => {
