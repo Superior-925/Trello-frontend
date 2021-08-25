@@ -82,6 +82,8 @@
                   <div class="modal-window-achived-task-list-name">List name: {{item.listName}}</div>
                   <div class="modal-window-achived-task-title">Task title: {{item.taskTitle}}</div>
                   <div class="modal-window-achived-task-text">Task text: {{item.taskText}}</div>
+                  <button type="button" class="btn btn-secondary restore-single-archive-task-button"
+                          [ngClass]="{invisible: !boardOwner}" (click)="restoreSingleTask(item.listName, item.taskId)">Restore task</button>
                 </div>
               </div>
             </div>
@@ -122,12 +124,13 @@
           <div class="draggable-box" *ngFor="let item of todoListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskTodoList)">Title: {{item.taskTitle}}</div>
+              <div class="task-title" (click)="open(modalTaskTodoList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
 
               <ng-template class="modal" #modalTaskTodoList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
-                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
+                             (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{todoList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -136,8 +139,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
-                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
+                             (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
                   <div class="add-executor-block">
                     <div class="add-executor-block-title" [ngClass]="{invisible: !boardOwner}">
@@ -187,6 +191,20 @@
                     </div>
                   </div>
 
+                  <div class="single-task-history-block">
+                    <div *ngIf = "taskActions.length !=0">
+                      <div class="single-task-history-block-title mt-2 mb-2">Action history:</div>
+                        <div *ngFor="let action of taskActions">
+                          <div *ngIf = "item.taskId == action.taskId">
+                            <div class="actions-tasks-block">
+                            <div class="actions-tasks-action">Action on a task: {{action.action}}</div>
+                            <div class="actions-tasks-date">Operation time: {{action.updatedAt}}</div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
@@ -195,6 +213,7 @@
 
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(todoListTasks, item.taskId)">Archieve task</button>
               </div>
             </div>
           </div>
@@ -225,12 +244,13 @@
           <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskProgressList)">Title: {{item.taskTitle}}</div>
+              <div class="task-title" (click)="open(modalTaskProgressList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
 
               <ng-template class="modal" #modalTaskProgressList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
-                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
+                                 (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{inProgressList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -239,9 +259,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
-                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
-
+                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
+                          (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
                   <div class="add-executor-block">
                     <div class="add-executor-block-title" [ngClass]="{invisible: !boardOwner}">
@@ -291,6 +311,20 @@
                     </div>
                   </div>
 
+                  <div class="single-task-history-block">
+                    <div *ngIf = "taskActions.length !=0">
+                      <div class="single-task-history-block-title mt-2 mb-2">Action history:</div>
+                      <div *ngFor="let action of taskActions">
+                        <div *ngIf = "item.taskId == action.taskId">
+                          <div class="actions-tasks-block">
+                            <div class="actions-tasks-action">Action on a task: {{action.action}}</div>
+                            <div class="actions-tasks-date">Operation time: {{action.updatedAt}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
@@ -299,6 +333,7 @@
 
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(inProgressListTasks, item.taskId)">Archieve task</button>
               </div>
             </div>
           </div>
@@ -329,12 +364,13 @@
           <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskCodedList)">Title: {{item.taskTitle}}</div>
+              <div class="task-title" (click)="open(modalTaskCodedList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
 
               <ng-template class="modal" #modalTaskCodedList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
-                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
+                                (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{codedList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -343,8 +379,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
-                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
+                          (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
 
                   <div class="add-executor-block">
@@ -395,6 +432,20 @@
                     </div>
                   </div>
 
+                  <div class="single-task-history-block">
+                    <div *ngIf = "taskActions.length !=0">
+                      <div class="single-task-history-block-title mt-2 mb-2">Action history:</div>
+                      <div *ngFor="let action of taskActions">
+                        <div *ngIf = "item.taskId == action.taskId">
+                          <div class="actions-tasks-block">
+                            <div class="actions-tasks-action">Action on a task: {{action.action}}</div>
+                            <div class="actions-tasks-date">Operation time: {{action.updatedAt}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
@@ -403,6 +454,7 @@
 
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(codedListTasks, item.taskId)">Archieve task</button>
               </div>
             </div>
           </div>
@@ -431,12 +483,13 @@
           <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskTestingList)">Title: {{item.taskTitle}}</div>
+              <div class="task-title" (click)="open(modalTaskTestingList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
 
               <ng-template class="modal" #modalTaskTestingList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
-                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
+                         (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{testingList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -445,8 +498,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
-                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
+                          (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
 
                   <div class="add-executor-block">
@@ -497,6 +551,20 @@
                     </div>
                   </div>
 
+                  <div class="single-task-history-block">
+                    <div *ngIf = "taskActions.length !=0">
+                      <div class="single-task-history-block-title mt-2 mb-2">Action history:</div>
+                      <div *ngFor="let action of taskActions">
+                        <div *ngIf = "item.taskId == action.taskId">
+                          <div class="actions-tasks-block">
+                            <div class="actions-tasks-action">Action on a task: {{action.action}}</div>
+                            <div class="actions-tasks-date">Operation time: {{action.updatedAt}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
@@ -505,6 +573,7 @@
 
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(testingListTasks, item.taskId)">Archieve task</button>
               </div>
             </div>
           </div>
@@ -533,12 +602,13 @@
           <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskDoneList)">Title: {{item.taskTitle}}</div>
+              <div class="task-title" (click)="open(modalTaskDoneList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
 
               <ng-template class="modal" #modalTaskDoneList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
-                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                    <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
+                           (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{doneList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -547,8 +617,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}" (change)="renameTaskTitleOrText(item.taskId, null, item.taskText)"></textarea>
-                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}" (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
+                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
+                          (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
 
                   <div class="add-executor-block">
@@ -599,6 +670,20 @@
                     </div>
                   </div>
 
+                  <div class="single-task-history-block">
+                    <div *ngIf = "taskActions.length !=0">
+                      <div class="single-task-history-block-title mt-2 mb-2">Action history:</div>
+                      <div *ngFor="let action of taskActions">
+                        <div *ngIf = "item.taskId == action.taskId">
+                          <div class="actions-tasks-block">
+                            <div class="actions-tasks-action">Action on a task: {{action.action}}</div>
+                            <div class="actions-tasks-date">Operation time: {{action.updatedAt}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
@@ -607,6 +692,7 @@
 
               <div class="options-block">
                 <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(doneListTasks, item.taskId)">Archieve task</button>
               </div>
             </div>
           </div>

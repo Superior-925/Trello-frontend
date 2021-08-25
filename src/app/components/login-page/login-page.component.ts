@@ -19,6 +19,8 @@ export class LoginPageComponent implements OnInit{
   user: SocialUser;
   loggedIn: boolean;
 
+  incorrectEmailPassword: boolean = false;
+
   constructor(private router: Router, private authService: AuthService, private socialAuthService: SocialAuthService){
     this.signUpForm = new FormGroup({
       email: new FormControl('', [
@@ -38,14 +40,20 @@ export class LoginPageComponent implements OnInit{
   submit(){
     this.authService.logIn(this.signUpForm.value.email, this.signUpForm.value.password).subscribe( (responseData: any) => {
 
-       localStorage.setItem('token', responseData.body.token);
-       localStorage.setItem('userId', responseData.body.id);
-
-      if (responseData.status == 200) {
+        if (responseData.status == 200) {
+          localStorage.setItem('token', responseData.body.token);
+          localStorage.setItem('refresh', responseData.body.refresh.token);
+          localStorage.setItem('userId', responseData.body.userId);
         this.router.navigate(['/workspace']);
         }
       },
-      error => console.log(error));
+      error =>
+      {
+        console.log(error);
+        if (error.status == 401) {
+          this.incorrectEmailPassword = true;
+        }
+      });
   }
 
   goToHomePage() {
@@ -62,11 +70,11 @@ export class LoginPageComponent implements OnInit{
         this.socialAuthService.authState.subscribe((user) => {
           this.user = user;
           this.loggedIn = (user != null);
-          this.authService.googleLogIn(user.email).subscribe( (responseData: any) => {
-              localStorage.setItem('token', responseData.body.token);
-              localStorage.setItem('userId', responseData.body.id);
-
+          this.authService.googleSignUp(user.email, user.provider).subscribe((responseData: any) => {
               if (responseData.status == 200) {
+                localStorage.setItem('token', responseData.body.token);
+                localStorage.setItem('refresh', responseData.body.refresh.token);
+                localStorage.setItem('userId', responseData.body.userId);
                 this.router.navigate(['/workspace']);
               }
             },
@@ -74,6 +82,22 @@ export class LoginPageComponent implements OnInit{
         });
       });
   }
+
+  //timerToken: any;
+
+  // refreshTokens() {
+  //     this.timerToken = setInterval(() => this.authService.refreshTokens().subscribe((responseData: any) => {
+  //       localStorage.removeItem('refresh');
+  //       localStorage.removeItem('token');
+  //
+  //       localStorage.setItem('refresh', responseData.body.refresh.token);
+  //       localStorage.setItem('token', responseData.body.token);
+  //     }), 5000);
+  // }
+  //
+  // stopRefresh() {
+  //   clearTimeout(this.timerToken)
+  // }
 
 
 }

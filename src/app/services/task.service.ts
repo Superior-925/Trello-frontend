@@ -10,13 +10,13 @@ import {Observable} from "rxjs";
 
 export class TaskService {
 
-  token: any = localStorage.getItem('token');
+  //token: any = localStorage.getItem('token');
 
   constructor(private http: HttpClient) { }
 
   addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number) {
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order};
     let jsonBody = JSON.stringify(body);
@@ -27,7 +27,7 @@ export class TaskService {
 
   loadTasks(boardId: number): Observable<any> {
 
-    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response',params: {param: boardId}, responseType: 'text'};
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
@@ -35,7 +35,7 @@ export class TaskService {
   }
 
   deleteTask(taskId: number) {
-    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response',params: {param: taskId}};
 
       return this.http.delete(`http://${config.development.host}:${config.development.port}/task`, httpOptionsDelete);
@@ -47,7 +47,7 @@ export class TaskService {
 
     let jsonBody = JSON.stringify(body);
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
   }
@@ -55,7 +55,7 @@ export class TaskService {
   deleteAllTasks(idsArray: object) {
 
 
-    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response',params: {taskIds: idsArray}};
 
     return this.http.delete(`http://${config.development.host}:${config.development.port}/task`, httpOptionsDelete);
@@ -63,7 +63,7 @@ export class TaskService {
   }
 
   searchTask(boardId: number, taskTitle: string): Observable<any> {
-    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response',params: {boardId: boardId, taskTitle: taskTitle}, responseType: 'text'};
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/search`, httpOptionsGet);
@@ -71,7 +71,7 @@ export class TaskService {
 
   selectExecutor(taskId: number, userId: number, boardId: number) {
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     let body: {} = {taskId: taskId, userId: userId, boardId: boardId};
     let jsonBody = JSON.stringify(body);
@@ -80,7 +80,7 @@ export class TaskService {
   }
 
   loadExecutors(boardId: number) {
-    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', responseType: 'text'};
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/executor` + boardId, httpOptionsGet);
@@ -88,7 +88,7 @@ export class TaskService {
 
   deleteExecutor(taskId: number, userId: number) {
 
-    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response',params: {taskId: taskId, userId: userId}};
 
     return this.http.delete(`http://${config.development.host}:${config.development.port}/task/executor`, httpOptionsDelete);
@@ -99,15 +99,22 @@ export class TaskService {
     let body: {} = idsForArchive;
     let jsonBody = JSON.stringify(body);
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     return this.http.patch(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
   }
 
+  archiveSingleTask(taskId: number) {
+
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response', params: {param: taskId}, responseType: 'text'};
+
+    return this.http.patch(`http://${config.development.host}:${config.development.port}/task` + taskId, null, httpOptions);
+  }
+
   loadArchivedTasks(boardId: number) {
 
-    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
-      observe: 'response',params: {param: boardId}, responseType: 'text'};
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response', params: {param: boardId}, responseType: 'text'};
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/archive`, httpOptionsGet);
 
@@ -119,15 +126,23 @@ export class TaskService {
 
     let jsonBody = JSON.stringify(body);
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive`, jsonBody, httpOptions);
 
   }
 
+  restoreSingleTask(taskId: number) {
+
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
+
+    return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive` + taskId, null, httpOptions);
+
+  }
+
   loadActionsOfTasks(boardId: number): Observable<any> {
 
-    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+    let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', responseType: 'text'};
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
@@ -136,7 +151,7 @@ export class TaskService {
   loadBoardRigths(boardId: number) {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
     };
 
@@ -150,7 +165,7 @@ export class TaskService {
 
     let jsonBody = JSON.stringify(body);
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task/list` + taskId, jsonBody, httpOptions);
   }
@@ -161,7 +176,7 @@ export class TaskService {
 
     let jsonBody = JSON.stringify(body);
 
-    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}), observe: 'response'};
+    let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
     return this.http.put(`http://${config.development.host}:${config.development.port}/task/order` + taskId, jsonBody, httpOptions);
   }

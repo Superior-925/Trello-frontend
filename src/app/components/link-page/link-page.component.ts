@@ -17,6 +17,8 @@ export class LinkPageComponent implements OnInit {
 
   toggleForAuthorized: boolean = false;
 
+  toggleForError: boolean = false;
+
   toggleForNotAuthorized: boolean = false;
 
   constructor(private router: Router, private boardService: BoardService) { }
@@ -36,6 +38,9 @@ export class LinkPageComponent implements OnInit {
         console.log(responseData.status);
         if (responseData.status == 200) {
           this.toggleForAuthorized = true;
+        }
+        if (responseData.status == 409) {
+          this.toggleForError = true;
         }
       });
     }

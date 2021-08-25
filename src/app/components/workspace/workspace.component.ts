@@ -3,7 +3,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {BoardService} from "../../services/board.service";
 import {AfterViewInit} from "@angular/core";
 import {OnChanges} from "@angular/core";
+import {OnInit} from "@angular/core";
 import {Board} from "../../interfaces/board";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-workspace',
@@ -11,7 +13,7 @@ import {Board} from "../../interfaces/board";
   styleUrls: ['./workspace.component.scss'],
 })
 
-export class WorkspaceComponent implements OnChanges, AfterViewInit{
+export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   createBoardForm : FormGroup;
 
@@ -27,13 +29,17 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
 
   boardOwner: boolean;
 
-  constructor(private boardService: BoardService) {
+  constructor(private boardService: BoardService, private authService: AuthService) {
 
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
         Validators.required
       ])
     });
+  }
+
+  ngOnInit(): void {
+
   }
 
   ngAfterViewInit(): void {
@@ -109,11 +115,15 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit{
   };
 
   loadBoardRigth() {
-    this.boardService.loadBoardRigth(this.boardId).subscribe((responseData: any) => {
-      let responseParse = JSON.parse(responseData.body);
-      this.boardOwner = responseParse.owner;
-    },
-      error => console.log(error));
+    if (this.boardId != undefined) {
+      this.boardService.loadBoardRigth(this.boardId).subscribe((responseData: any) => {
+          let responseParse = JSON.parse(responseData.body);
+          this.boardOwner = responseParse.owner;
+        },
+        error => console.log(error));
+    }
   };
+
+
 
 }

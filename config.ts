@@ -4,11 +4,11 @@ export const config = {
     port: "3030"
   },
   production: {
-    host: "devdemo",
+    host: "localhost",
     port: "4444"
   },
   test: {
-    host: "devdemo",
+    host: "localhost",
     port: "7777"
   }
 };

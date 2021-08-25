@@ -21,6 +21,8 @@ export class SignupPageComponent {
   user: SocialUser;
   loggedIn: boolean;
 
+  emailAlreadyExist: boolean = false;
+
   constructor(private router: Router, private authService: AuthService, private socialAuthService: SocialAuthService){
     this.signUpForm = new FormGroup({
       email: new FormControl('', [
@@ -36,13 +38,21 @@ export class SignupPageComponent {
 
   submit(){
     this.authService.signUp(this.signUpForm.value.email, this.signUpForm.value.password).subscribe((responseData: any) => {
+        console.log(responseData);
         localStorage.setItem('token', responseData.body.token);
-        localStorage.setItem('userId', responseData.body.id);
+        localStorage.setItem('refresh', responseData.body.refresh.token);
+        localStorage.setItem('userId', responseData.body.userId);
+        //this.refreshTokens();
         if (responseData.status == 200) {
           this.router.navigate(['/workspace']);
         }
       },
-      error => console.log(error));
+      error => {
+      console.log(error);
+        if (error.status == 409) {
+          this.emailAlreadyExist = true;
+        }
+    });
   }
 
   goToLoginPage() {
@@ -60,9 +70,10 @@ export class SignupPageComponent {
           this.user = user;
           this.loggedIn = (user != null);
           this.authService.googleSignUp(user.email, user.provider).subscribe((responseData: any) => {
-              localStorage.setItem('token', responseData.body.token);
-              localStorage.setItem('userId', responseData.body.id);
               if (responseData.status == 200) {
+                localStorage.setItem('token', responseData.body.token);
+                localStorage.setItem('refresh', responseData.body.refresh.token);
+                localStorage.setItem('userId', responseData.body.userId);
                 this.router.navigate(['/workspace']);
               }
             },

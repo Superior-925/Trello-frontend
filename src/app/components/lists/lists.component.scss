@@ -33,6 +33,12 @@
   }
 }
 
+.restore-single-archive-task-button{
+  width: 30%;
+  margin: 1rem auto;
+  font-size: 0.8rem;
+}
+
 .list-for-restore-block{
   @media (max-width: 575.98px) {
     display: flex;
@@ -152,7 +158,7 @@
 
 .options-block {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }

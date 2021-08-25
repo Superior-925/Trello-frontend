@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 
 export class BoardService {
 
-  token: any = localStorage.getItem('token');
+  //token: any = localStorage.getItem('token');
 
   boardOwner: boolean;
 
@@ -18,7 +18,7 @@ export class BoardService {
   loadBoards(): Observable<any> {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {param: localStorage.getItem('userId')}, responseType: 'text'
     };
 
@@ -31,7 +31,7 @@ export class BoardService {
     let httpOptions: {} = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': localStorage.getItem('token') as string
       }), observe: 'response'
     };
 
@@ -45,7 +45,7 @@ export class BoardService {
   deleteBoard(id: number) {
 
     let httpOptionsDelete: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {boardId: id, userId: localStorage.getItem('userId')}
     };
 
@@ -61,7 +61,7 @@ export class BoardService {
     let httpOptions: {} = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': localStorage.getItem('token') as string
       }), observe: 'response'
     };
 
@@ -73,7 +73,7 @@ export class BoardService {
     let httpOptions: {} = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'Authorization': localStorage.getItem('token') as string
       }), observe: 'response'
     };
 
@@ -88,7 +88,7 @@ export class BoardService {
   invite(link: string, userId: any) {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {userId: userId}, responseType: 'text'
     };
 
@@ -97,7 +97,7 @@ export class BoardService {
 
   loadInvitedUsers(boardId: number) {
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', responseType: 'text'
     };
 
@@ -108,7 +108,7 @@ export class BoardService {
   loadBoardRigth(boardId: number) {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}),
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
     };
 

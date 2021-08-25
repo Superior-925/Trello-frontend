@@ -35,6 +35,7 @@
                      *ngIf="signUpForm.controls['password'].invalid && signUpForm.controls['password'].touched">
                   Password not specified
                 </div>
+                <div class="submit-data-error" *ngIf="incorrectEmailPassword">Incorrect email or password!</div>
               </div>
 
               <div class="form-group mt-4 mb-4 d-flex justify-content-center">
