@@ -3,30 +3,32 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {config} from "../../../config";
 import {Observable} from "rxjs";
+import {responseBoard} from '../interfaces/response-board';
+import {addBoardResponse} from '../interfaces/add-board-response';
+import {responseInvitedUsers} from '../interfaces/response-invited-users';
+import {inviteResponseBoard} from '../interfaces/invite-response-board';
 
 @Injectable({providedIn: 'root'})
 
 export class BoardService {
-
-  //token: any = localStorage.getItem('token');
 
   boardOwner: boolean;
 
   constructor(private http: HttpClient, private router: Router) {
   }
 
-  loadBoards(): Observable<any> {
+  loadBoards(): Observable<responseBoard> {
 
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {param: localStorage.getItem('userId')}, responseType: 'text'
     };
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/board`, httpOptionsGet);
+    return this.http.get<responseBoard>(`http://${config.development.host}:${config.development.port}/board`, httpOptionsGet);
 
   }
 
-  addBoard(boardName: string) {
+  addBoard(boardName: string): Observable<addBoardResponse> {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
@@ -39,20 +41,20 @@ export class BoardService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+    return this.http.post<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
   }
 
-  deleteBoard(id: number) {
+  deleteBoard(id: number): Observable<addBoardResponse> {
 
     let httpOptionsDelete: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {boardId: id, userId: localStorage.getItem('userId')}
     };
 
-    return this.http.delete(`http://${config.development.host}:${config.development.port}/board`, httpOptionsDelete);
+    return this.http.delete<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, httpOptionsDelete);
   }
 
-  renameBoard(boardId: number, boardName: string) {
+  renameBoard(boardId: number, boardName: string): Observable<addBoardResponse> {
 
     let body: {} = {boardId: boardId, boardName: boardName};
 
@@ -65,10 +67,10 @@ export class BoardService {
       }), observe: 'response'
     };
 
-    return this.http.put(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+    return this.http.put<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
   }
 
-  inviteCreateLink(boardId: number) {
+  inviteCreateLink(boardId: number):Observable<inviteResponseBoard> {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
@@ -81,7 +83,7 @@ export class BoardService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post(`http://${config.development.host}:${config.development.port}/board/invitation`, jsonBody, httpOptions);
+    return this.http.post<inviteResponseBoard>(`http://${config.development.host}:${config.development.port}/board/invitation`, jsonBody, httpOptions);
 
   }
 
@@ -92,27 +94,27 @@ export class BoardService {
       observe: 'response', params: {userId: userId}, responseType: 'text'
     };
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/board/invitation/` + link, httpOptionsGet);
+    return this.http.post(`http://${config.development.host}:${config.development.port}/board/invitation/` + link,null, httpOptionsGet);
   }
 
-  loadInvitedUsers(boardId: number) {
+  loadInvitedUsers(boardId: number): Observable<responseInvitedUsers> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', responseType: 'text'
     };
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/board/invitation/users/` + boardId, httpOptionsGet);
+    return this.http.get<responseInvitedUsers>(`http://${config.development.host}:${config.development.port}/board/invitation/users/` + boardId, httpOptionsGet);
   }
 
 
-  loadBoardRigth(boardId: number) {
+  loadBoardRigth(boardId: number): Observable<inviteResponseBoard> {
 
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
     };
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
+    return this.http.get<inviteResponseBoard>(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
 
   }
 

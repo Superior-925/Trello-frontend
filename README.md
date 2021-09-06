@@ -15,6 +15,7 @@ The app allows:
 - Archive and restore tasks
 - View archived tasks
 - Search for tasks on the board
+- To search for user tasks, enter the user's mail. The first character is @. Example: @asd@gmail.com.
 - View the history of actions on board tasks
 - Invite other app users to the board
 - Assign task executor to users who have been invited to the board
@@ -54,6 +55,35 @@ $ npm start
 ```
 
 - Go to the following link http://localhost:4200
+
+## To test the app run the following commands
+
+- Run this command for unit testing
+
+```sh
+$ ng test
+ ```
+
+## For end-to-end testing, run the commands (you also need a server)
+
+```sh
+$ cypress install
+ ```
+
+- To launch the testing interface of end-to-end tistings, run the command
+
+```sh
+$ ng e2e
+ ```
+
+- To run end-to-end tests in automatic mode, run the following commands
+
+```sh
+$ npm start
+
+$ cypress run
+ ```
+
 
 If you have questions - contact me on email skykeeper925@gmail.com.
 Best regards Antony Logunov.

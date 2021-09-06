@@ -110,8 +110,23 @@
   <div class="wrapper">
 
     <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
+      <div class="list-title-block d-flex">
+      <div class="list-title-to-do">
         {{todoList}}
+      </div>
+
+        <div class="btn-group">
+          <button class="list-title-block-options-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{visibility: !boardOwner}" (click) = showHideTitleOptionsFunction() (blur) = showHideTitleOptionsTrue()>
+            <img src="assets/3dots.jpg" alt="" width="15">
+          </button>
+          <ul class="dropdown-menu title-block-options">
+            <div class="list-options">
+              <button type="button" class="btn btn-primary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(todoListTasks)">Delete tasks</button>
+              <button type="button" class="btn btn-secondary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(todoListTasks)">Archive tasks</button>
+            </div>
+          </ul>
+        </div>
+
       </div>
       <div class="dividing-line"></div>
 
@@ -124,7 +139,23 @@
           <div class="draggable-box" *ngFor="let item of todoListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskTodoList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
+              <div class="task-title-wrapper" (click)="open(modalTaskTodoList); loadActionsOfTasks()">
+              <div >Title: {{item.taskTitle}}</div>
+              <div *ngIf="showHideTitleOptions">
+                <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
+                        [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
+                  <img src="assets/pencil.png" alt="" width="15">
+                </button>
+              </div>
+              </div>
+
+              <ng-template #popover>
+                <div class="task-options">
+                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId); popoverTask($event)">Delete task</button>
+                <button type="button" class="btn btn-secondary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(todoListTasks, item.taskId); popoverTask($event)">Archieve task</button>
+                </div>
+              </ng-template>
+
 
               <ng-template class="modal" #modalTaskTodoList let-modal>
                 <div class="modal-header">
@@ -153,7 +184,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task executors(click on the executor to remove him from the task):</div>
+                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task responseExecutors(click on the executor to remove him from the task):</div>
                   <div class="executors-block-content" [ngClass]="{invisible: !boardOwner}">
                     <div *ngFor="let executor of taskExecutors">
                       <div *ngIf="item.taskId == executor.taskId">
@@ -167,7 +198,7 @@
                   </div>
 
                   <div class="self-executor" *ngIf="boardOwner == false">
-                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task executors:</div>
+                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task responseExecutors:</div>
                     <div class="task-executors-block-not-owner">
                       <div *ngFor="let executor of taskExecutors">
                         <div *ngIf="item.taskId == executor.taskId">
@@ -205,16 +236,16 @@
                     </div>
                   </div>
 
+                  <div class="right-side-block">
+
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
                 </div>
               </ng-template>
 
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(todoListTasks, item.taskId)">Archieve task</button>
-              </div>
             </div>
           </div>
         </div>
@@ -222,16 +253,28 @@
 
 
       <div *ngIf="addTaskStatusTodoList; then addTaskButtonTodoList else inputTaskFormTodoList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(todoListTasks)">Delete all tasks</button>
-        <button type="button" class="btn btn-secondary" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(todoListTasks)">Archive tasks</button>
-      </div>
+
     </div>
 
 
     <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{inProgressList}}
+      <div class="list-title-block d-flex">
+        <div class="list-title-to-do">
+          {{inProgressList}}
+        </div>
+
+        <div class="btn-group">
+          <button class="list-title-block-options-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{visibility: !boardOwner}" (click) = showHideTitleOptionsFunction() (blur) = showHideTitleOptionsTrue()>
+            <img src="assets/3dots.jpg" alt="" width="15">
+          </button>
+          <ul class="dropdown-menu title-block-options">
+            <div class="list-options">
+              <button type="button" class="btn btn-primary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(inProgressListTasks)">Delete tasks</button>
+              <button type="button" class="btn btn-secondary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(inProgressListTasks)">Archive tasks</button>
+            </div>
+          </ul>
+        </div>
+
       </div>
       <div class="dividing-line"></div>
 
@@ -244,13 +287,29 @@
           <div class="draggable-box" *ngFor="let item of inProgressListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskProgressList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
+              <div class="task-title-wrapper" (click)="open(modalTaskProgressList); loadActionsOfTasks()">
+                <div >Title: {{item.taskTitle}}</div>
+                <div *ngIf="showHideTitleOptions">
+                <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
+                        [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
+                  <img src="assets/pencil.png" alt="" width="15">
+                </button>
+                </div>
+              </div>
+
+              <ng-template #popover>
+                <div class="task-options">
+                  <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId); popoverTask($event)">Delete task</button>
+                  <button type="button" class="btn btn-secondary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(inProgressListTasks, item.taskId); popoverTask($event)">Archieve task</button>
+                </div>
+              </ng-template>
+
 
               <ng-template class="modal" #modalTaskProgressList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
                     <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
-                                 (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                                                                     (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{inProgressList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -259,7 +318,7 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
                   <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
                           (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
 
@@ -273,7 +332,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task executors(click on the executor to remove him from the task):</div>
+                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task responseExecutors(click on the executor to remove him from the task):</div>
                   <div class="executors-block-content" [ngClass]="{invisible: !boardOwner}">
                     <div *ngFor="let executor of taskExecutors">
                       <div *ngIf="item.taskId == executor.taskId">
@@ -287,7 +346,7 @@
                   </div>
 
                   <div class="self-executor" *ngIf="boardOwner == false">
-                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task executors:</div>
+                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task responseExecutors:</div>
                     <div class="task-executors-block-not-owner">
                       <div *ngFor="let executor of taskExecutors">
                         <div *ngIf="item.taskId == executor.taskId">
@@ -325,16 +384,16 @@
                     </div>
                   </div>
 
+                  <div class="right-side-block">
+
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
                 </div>
               </ng-template>
 
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(inProgressListTasks, item.taskId)">Archieve task</button>
-              </div>
             </div>
           </div>
         </div>
@@ -342,16 +401,28 @@
 
 
       <div *ngIf="addTaskStatusProgressList; then addTaskButtonProgressList else inputTaskFormProgressList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(inProgressListTasks)">Delete all tasks</button>
-        <button type="button" class="btn btn-secondary" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(inProgressListTasks)">Archive tasks</button>
-      </div>
+
     </div>
 
 
     <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{codedList}}
+      <div class="list-title-block d-flex">
+        <div class="list-title-to-do">
+          {{codedList}}
+        </div>
+
+        <div class="btn-group">
+          <button class="list-title-block-options-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{visibility: !boardOwner}" (click) = showHideTitleOptionsFunction() (blur) = showHideTitleOptionsTrue()>
+            <img src="assets/3dots.jpg" alt="" width="15">
+          </button>
+          <ul class="dropdown-menu title-block-options">
+            <div class="list-options">
+              <button type="button" class="btn btn-primary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(codedListTasks)">Delete tasks</button>
+              <button type="button" class="btn btn-secondary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(codedListTasks)">Archive tasks</button>
+            </div>
+          </ul>
+        </div>
+
       </div>
       <div class="dividing-line"></div>
 
@@ -364,13 +435,29 @@
           <div class="draggable-box" *ngFor="let item of codedListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskCodedList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
+              <div class="task-title-wrapper" (click)="open(modalTaskCodedList); loadActionsOfTasks()">
+                <div >Title: {{item.taskTitle}}</div>
+                <div *ngIf="showHideTitleOptions">
+                <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
+                        [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
+                  <img src="assets/pencil.png" alt="" width="15">
+                </button>
+                </div>
+              </div>
+
+              <ng-template #popover>
+                <div class="task-options">
+                  <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId); popoverTask($event)">Delete task</button>
+                  <button type="button" class="btn btn-secondary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(codedListTasks, item.taskId); popoverTask($event)">Archieve task</button>
+                </div>
+              </ng-template>
+
 
               <ng-template class="modal" #modalTaskCodedList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
                     <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
-                                (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                                                                     (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{codedList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -379,10 +466,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
                   <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
                           (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
-
 
                   <div class="add-executor-block">
                     <div class="add-executor-block-title" [ngClass]="{invisible: !boardOwner}">
@@ -394,7 +480,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task executors(click on the executor to remove him from the task):</div>
+                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task responseExecutors(click on the executor to remove him from the task):</div>
                   <div class="executors-block-content" [ngClass]="{invisible: !boardOwner}">
                     <div *ngFor="let executor of taskExecutors">
                       <div *ngIf="item.taskId == executor.taskId">
@@ -408,7 +494,7 @@
                   </div>
 
                   <div class="self-executor" *ngIf="boardOwner == false">
-                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task executors:</div>
+                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task responseExecutors:</div>
                     <div class="task-executors-block-not-owner">
                       <div *ngFor="let executor of taskExecutors">
                         <div *ngIf="item.taskId == executor.taskId">
@@ -446,31 +532,45 @@
                     </div>
                   </div>
 
+                  <div class="right-side-block">
+
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
                 </div>
               </ng-template>
 
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(codedListTasks, item.taskId)">Archieve task</button>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
+
       <div *ngIf="addTaskStatusCodedList; then addTaskButtonCodedList else inputTaskFormCodedList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(codedListTasks)">Delete all tasks</button>
-        <button type="button" class="btn btn-secondary" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(codedListTasks)">Archive tasks</button>
-      </div>
+
     </div>
 
+
     <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{testingList}}
+      <div class="list-title-block d-flex">
+        <div class="list-title-to-do">
+          {{testingList}}
+        </div>
+
+        <div class="btn-group">
+          <button class="list-title-block-options-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{visibility: !boardOwner}" (click) = showHideTitleOptionsFunction() (blur) = showHideTitleOptionsTrue()>
+            <img src="assets/3dots.jpg" alt="" width="15">
+          </button>
+          <ul class="dropdown-menu title-block-options">
+            <div class="list-options">
+              <button type="button" class="btn btn-primary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(testingListTasks)">Delete tasks</button>
+              <button type="button" class="btn btn-secondary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(testingListTasks)">Archive tasks</button>
+            </div>
+          </ul>
+        </div>
+
       </div>
       <div class="dividing-line"></div>
 
@@ -483,13 +583,29 @@
           <div class="draggable-box" *ngFor="let item of testingListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskTestingList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
+              <div class="task-title-wrapper" (click)="open(modalTaskTestingList); loadActionsOfTasks()">
+                <div >Title: {{item.taskTitle}}</div>
+                <div *ngIf="showHideTitleOptions">
+                <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
+                        [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
+                  <img src="assets/pencil.png" alt="" width="15">
+                </button>
+                </div>
+              </div>
+
+              <ng-template #popover>
+                <div class="task-options">
+                  <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId); popoverTask($event)">Delete task</button>
+                  <button type="button" class="btn btn-secondary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(testingListTasks, item.taskId); popoverTask($event)">Archieve task</button>
+                </div>
+              </ng-template>
+
 
               <ng-template class="modal" #modalTaskTestingList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
                     <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
-                         (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                                                                     (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{testingList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -498,10 +614,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
                   <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
                           (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
-
 
                   <div class="add-executor-block">
                     <div class="add-executor-block-title" [ngClass]="{invisible: !boardOwner}">
@@ -513,7 +628,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task executors(click on the executor to remove him from the task):</div>
+                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task responseExecutors(click on the executor to remove him from the task):</div>
                   <div class="executors-block-content" [ngClass]="{invisible: !boardOwner}">
                     <div *ngFor="let executor of taskExecutors">
                       <div *ngIf="item.taskId == executor.taskId">
@@ -527,7 +642,7 @@
                   </div>
 
                   <div class="self-executor" *ngIf="boardOwner == false">
-                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task executors:</div>
+                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task responseExecutors:</div>
                     <div class="task-executors-block-not-owner">
                       <div *ngFor="let executor of taskExecutors">
                         <div *ngIf="item.taskId == executor.taskId">
@@ -565,31 +680,45 @@
                     </div>
                   </div>
 
+                  <div class="right-side-block">
+
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
                 </div>
               </ng-template>
 
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(testingListTasks, item.taskId)">Archieve task</button>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
+
       <div *ngIf="addTaskStatusTestingList; then addTaskButtonTestingList else inputTaskFormTestingList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(testingListTasks)">Delete all tasks</button>
-        <button type="button" class="btn btn-secondary" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(testingListTasks)">Archive tasks</button>
-      </div>
+
     </div>
 
+
     <div class="list-item">
-      <div class="list-title d-flex justify-content-center">
-        {{doneList}}
+      <div class="list-title-block d-flex">
+        <div class="list-title-to-do">
+          {{doneList}}
+        </div>
+
+        <div class="btn-group">
+          <button class="list-title-block-options-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{visibility: !boardOwner}" (click) = showHideTitleOptionsFunction() (blur) = showHideTitleOptionsTrue()>
+            <img src="assets/3dots.jpg" alt="" width="15">
+          </button>
+          <ul class="dropdown-menu title-block-options">
+            <div class="list-options">
+              <button type="button" class="btn btn-primary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(doneListTasks)">Delete tasks</button>
+              <button type="button" class="btn btn-secondary btn-sm list-item-options-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(doneListTasks)">Archive tasks</button>
+            </div>
+          </ul>
+        </div>
+
       </div>
       <div class="dividing-line"></div>
 
@@ -602,13 +731,29 @@
           <div class="draggable-box" *ngFor="let item of doneListTasks" cdkDrag>
             <div class="task-wrapper">
 
-              <div class="task-title" (click)="open(modalTaskDoneList); loadActionsOfTasks()">Title: {{item.taskTitle}}</div>
+              <div class="task-title-wrapper" (click)="open(modalTaskDoneList); loadActionsOfTasks()">
+                <div >Title: {{item.taskTitle}}</div>
+                <div *ngIf="showHideTitleOptions">
+                <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
+                        [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
+                  <img src="assets/pencil.png" alt="" width="15">
+                </button>
+                </div>
+              </div>
+
+              <ng-template #popover>
+                <div class="task-options">
+                  <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId); popoverTask($event)">Delete task</button>
+                  <button type="button" class="btn btn-secondary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(doneListTasks, item.taskId); popoverTask($event)">Archieve task</button>
+                </div>
+              </ng-template>
+
 
               <ng-template class="modal" #modalTaskDoneList let-modal>
                 <div class="modal-header">
                   <div class="modal-basic-task-title">
                     <div class="task-title-modal">Task title: <input type="text" class="form-control task-title-modal-input" [(ngModel)]="item.taskTitle" [ngClass]="{disable: !boardOwner}"
-                           (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
+                                                                     (change)="renameTaskTitleOrText(item.taskId, item.taskTitle, null)"/></div>
                     <h6>In list: {{doneList}}</h6>
                   </div>
                   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -617,10 +762,9 @@
                 </div>
                 <div class="modal-body">
                   <h5>Description:</h5>
-                  <textarea  rows="5" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
+                  <textarea  rows="3" type="text" class="form-control" [(ngModel)]="item.taskText" [ngClass]="{disable: !boardOwner}"></textarea>
                   <button type="button" class="btn btn-primary save-changes-button" [ngClass]="{invisible: !boardOwner}"
                           (click)="renameTaskTitleOrText(item.taskId, null, item.taskText)">Save changes</button>
-
 
                   <div class="add-executor-block">
                     <div class="add-executor-block-title" [ngClass]="{invisible: !boardOwner}">
@@ -632,7 +776,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task executors(click on the executor to remove him from the task):</div>
+                  <div class="executors-block-title" [ngClass]="{invisible: !boardOwner}">Task responseExecutors(click on the executor to remove him from the task):</div>
                   <div class="executors-block-content" [ngClass]="{invisible: !boardOwner}">
                     <div *ngFor="let executor of taskExecutors">
                       <div *ngIf="item.taskId == executor.taskId">
@@ -646,7 +790,7 @@
                   </div>
 
                   <div class="self-executor" *ngIf="boardOwner == false">
-                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task executors:</div>
+                    <div class="task-executors-block-title-not-owner d-flex justify-content-center mt-4 mb-4">Task responseExecutors:</div>
                     <div class="task-executors-block-not-owner">
                       <div *ngFor="let executor of taskExecutors">
                         <div *ngIf="item.taskId == executor.taskId">
@@ -684,27 +828,26 @@
                     </div>
                   </div>
 
+                  <div class="right-side-block">
+
+                  </div>
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
                 </div>
               </ng-template>
 
-              <div class="options-block">
-                <button type="button" class="btn btn-primary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteTask(item.taskId)">Delete task</button>
-                <button type="button" class="btn btn-secondary btn-sm delete-task-button" [ngClass]="{invisible: !boardOwner}" (click)="archiveSingleTask(doneListTasks, item.taskId)">Archieve task</button>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
+
       <div *ngIf="addTaskStatusDoneList; then addTaskButtonDoneList else inputTaskFormDoneList"></div>
-      <div class="list-options">
-        <button type="button" class="btn btn-primary btn-sm" [ngClass]="{invisible: !boardOwner}" (click)="deleteAllTasks(doneListTasks)">Delete all tasks</button>
-        <button type="button" class="btn btn-secondary" [ngClass]="{invisible: !boardOwner}" (click)="archiveTasks(doneListTasks)">Archive tasks</button>
-      </div>
+
     </div>
+
 
   </div>
 </div>

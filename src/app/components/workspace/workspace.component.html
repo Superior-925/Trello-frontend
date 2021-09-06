@@ -5,7 +5,7 @@
     <div class="add-board-form">
       <form [formGroup]="createBoardForm" novalidate (ngSubmit)="addBoard()" class="d-flex align-items-center">
       <div class="form-group">
-        <input type="text" class="form-control add-board-form" formControlName="board" placeholder="Enter board name"/>
+        <input type="text" id="board-add-form" class="form-control add-board-form" formControlName="board" placeholder="Enter board name"/>
       </div>
       <div class="form-group d-flex">
         <button class="btn btn-default btn btn-primary btn-lg btn-block" id="submit-button" [disabled]="createBoardForm.invalid">
@@ -31,7 +31,7 @@
         </li>
         <div class="rename-delete-block">
           <div class="form-group rename-board">
-            <input type="text" class="form-control rename-board-input" [(ngModel)]="newBoardName" [ngClass]="{disable: !boardOwner}" (change)="renameBoard()" value="{{boardName}}" placeholder="Current board"/>
+            <input type="text" class="form-control rename-board-input" name="board-name" [(ngModel)]="newBoardName" [ngClass]="{disable: !boardOwner}" (change)="renameBoard()" value="{{boardName}}" placeholder="Current board"/>
           </div>
           <button type="button" class="btn btn-primary delete-board-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteBoard()">Delete board</button>
         </div>

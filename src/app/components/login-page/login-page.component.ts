@@ -38,7 +38,7 @@ export class LoginPageComponent implements OnInit{
   }
 
   submit(){
-    this.authService.logIn(this.signUpForm.value.email, this.signUpForm.value.password).subscribe( (responseData: any) => {
+    this.authService.logIn(this.signUpForm.value.email, this.signUpForm.value.password).subscribe( (responseData) => {
 
         if (responseData.status == 200) {
           localStorage.setItem('token', responseData.body.token);
@@ -70,7 +70,7 @@ export class LoginPageComponent implements OnInit{
         this.socialAuthService.authState.subscribe((user) => {
           this.user = user;
           this.loggedIn = (user != null);
-          this.authService.googleSignUp(user.email, user.provider).subscribe((responseData: any) => {
+          this.authService.googleSignUp(user.email, user.provider).subscribe((responseData) => {
               if (responseData.status == 200) {
                 localStorage.setItem('token', responseData.body.token);
                 localStorage.setItem('refresh', responseData.body.refresh.token);
@@ -82,22 +82,5 @@ export class LoginPageComponent implements OnInit{
         });
       });
   }
-
-  //timerToken: any;
-
-  // refreshTokens() {
-  //     this.timerToken = setInterval(() => this.authService.refreshTokens().subscribe((responseData: any) => {
-  //       localStorage.removeItem('refresh');
-  //       localStorage.removeItem('token');
-  //
-  //       localStorage.setItem('refresh', responseData.body.refresh.token);
-  //       localStorage.setItem('token', responseData.body.token);
-  //     }), 5000);
-  // }
-  //
-  // stopRefresh() {
-  //   clearTimeout(this.timerToken)
-  // }
-
 
 }

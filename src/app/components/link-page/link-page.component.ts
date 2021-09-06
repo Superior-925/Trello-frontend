@@ -7,6 +7,7 @@ import {BoardService} from "../../services/board.service";
   templateUrl: './link-page.component.html',
   styleUrls: ['./link-page.component.scss']
 })
+
 export class LinkPageComponent implements OnInit {
 
   sublink: string = '';
@@ -25,26 +26,24 @@ export class LinkPageComponent implements OnInit {
 
   ngOnInit(): void {
     let link = window.location.pathname;
-    console.log(link);
     this.sublink = link.substr(link.lastIndexOf('/') + 1);
-    console.log(this.sublink);
   }
 
   invite() {
     if(this.token) {
-      console.log(this.token);
-      console.log("User ID " + this.userId);
       this.boardService.invite(this.sublink, this.userId).subscribe((responseData: any) => {
-        console.log(responseData.status);
+        console.log(responseData.body);
         if (responseData.status == 200) {
           this.toggleForAuthorized = true;
         }
-        if (responseData.status == 409) {
+
+      }, error => {
+        if (error.status == 409) {
           this.toggleForError = true;
         }
-      });
+        });
     }
-    if(!this.token) {
+    if(!(localStorage.getItem('token'))) {
       this.toggleForNotAuthorized = true;
     }
   }

@@ -4,8 +4,9 @@ import {BoardService} from "../../services/board.service";
 import {AfterViewInit} from "@angular/core";
 import {OnChanges} from "@angular/core";
 import {OnInit} from "@angular/core";
-import {Board} from "../../interfaces/board";
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
+import {newBoard} from "../../interfaces/new-board";
 
 @Component({
   selector: 'app-workspace',
@@ -17,7 +18,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   createBoardForm : FormGroup;
 
-  userBoards: any = [];
+  userBoards: newBoard[] = [];
 
   boardName: string = '';
 
@@ -29,7 +30,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   boardOwner: boolean;
 
-  constructor(private boardService: BoardService, private authService: AuthService) {
+  constructor(private boardService: BoardService, private authService: AuthService, private router: Router) {
 
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
@@ -39,12 +40,20 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {
-
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/login']);
+    }
   }
 
   ngAfterViewInit(): void {
-    this.boardService.loadBoards().subscribe((responseData: any) => {
-        this.userBoards = JSON.parse(responseData.body);
+    this.boardService.loadBoards().subscribe((responseData) => {
+        this.userBoards.length = 0;
+        let responseBoards = JSON.parse(responseData.body);
+        for (let i = 0; i < responseBoards.length; i++) {
+          let newBoard: newBoard = {boardName: responseBoards[i].boardName, boardId: responseBoards[i].id};
+          this.userBoards.push(newBoard);
+        }
+
         if (this.userBoards.length) {
           this.boardName = this.userBoards[0].boardName;
           this.boardId = this.userBoards[0].boardId;
@@ -60,8 +69,9 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   };
 
   addBoard(){
-    this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
-        let newBoard = new Board(responseData.body.boardName, responseData.body.id);
+    this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData) => {
+        let newBoard: newBoard = {boardName: responseData.body.boardName, boardId: responseData.body.id};
+
         this.userBoards.push(newBoard);
         this.selectNewBoard(responseData.body.id, responseData.body.boardName)
       },
@@ -70,8 +80,8 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   };
 
   renameBoard() {
-    this.boardService.renameBoard(this.boardId, this.newBoardName).subscribe((responseData: any) => {
-      this.userBoards.forEach(function(item: any){
+    this.boardService.renameBoard(this.boardId, this.newBoardName).subscribe((responseData) => {
+      this.userBoards.forEach(function(item: newBoard){
         if (item.boardId == responseData.body.id) {item.boardName = responseData.body.boardName}
       });
     },
@@ -81,8 +91,8 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   deleteBoard() {
 
     if(confirm("Are you sure to delete board?")) {
-      this.boardService.deleteBoard(this.boardId).subscribe((responseData: any) => {
-        let filterUserBoards = this.userBoards.filter((item:any) => item.boardId !== responseData.body);
+      this.boardService.deleteBoard(this.boardId).subscribe((responseData) => {
+        let filterUserBoards = this.userBoards.filter((item:newBoard) => item.boardId !== +responseData.body);
         this.userBoards = filterUserBoards;
 
         if (this.userBoards.length) {
@@ -108,7 +118,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   inviteCreateLink($event: any) {
     $event.preventDefault();
-    this.boardService.inviteCreateLink(this.boardId).subscribe((responseData: any) => {
+    this.boardService.inviteCreateLink(this.boardId).subscribe((responseData) => {
       this.boardLink = responseData.body;
     },
       error => console.log(error));
@@ -116,7 +126,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   loadBoardRigth() {
     if (this.boardId != undefined) {
-      this.boardService.loadBoardRigth(this.boardId).subscribe((responseData: any) => {
+      this.boardService.loadBoardRigth(this.boardId).subscribe((responseData) => {
           let responseParse = JSON.parse(responseData.body);
           this.boardOwner = responseParse.owner;
         },

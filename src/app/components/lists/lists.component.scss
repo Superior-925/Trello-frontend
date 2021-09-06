@@ -89,6 +89,12 @@
   font-weight: bold;
 }
 
+.list-title-to-do {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: auto;
+}
+
 .dividing-line {
   display: flex;
   width: 100%;
@@ -151,6 +157,7 @@
 .task-wrapper {
   margin: auto;
   padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   border: solid 1px darkgray;
   border-radius:5px;
 
@@ -164,10 +171,15 @@
 }
 
 .list-options {
-  justify-content: space-around;
-  margin: -0.3rem auto 1rem auto;
-  display: flex;
-  width: 70%;
+  //display: flex;
+}
+
+
+
+.list-item-options-button {
+  width: 90%;
+  margin: 0.5rem auto;
+
 }
 
 .search-form {
@@ -327,6 +339,14 @@
   display: none;
 }
 
+.visibility {
+  visibility: hidden;
+}
+
+.hide {
+  visibility: hidden;
+}
+
 .disable{
   pointer-events: none;
 }
@@ -347,6 +367,59 @@
   @media (max-width: 575.98px) {
     margin: 0.5rem auto;
   }
+}
+
+.task-title-wrapper {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0.3rem;
+  margin: auto;
+  width: 90%;
+  font-weight: bold;
+  cursor: pointer;
+  border: solid 1px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  &:hover {
+    .popover-button {
+      visibility: visible;
+    }
+  }
+}
+
+.popover-button{
+  visibility: hidden;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+  margin-right: 3px;
+  &:hover {
+    background-color: #E4E3E2;
+  }
+}
+
+.task-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-task-button {
+  margin-bottom: 0.5rem;
+}
+
+.list-title-block-options-button {
+  position: absolute;
+  right: 0px;
+  border: none;
+  border-radius: 5px;
+  &:hover {
+    background-color: #E4E3E2;
+  }
+}
+
+.title-block-options {
+  width: 80px;
 }
 
 // drag and drop styles
