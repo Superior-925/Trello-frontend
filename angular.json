@@ -76,7 +76,11 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
+          "options": {
+            "browserTarget": "Trello-frontend:build",
+            "extraWebpackConfig": "./cypress/coverage.webpack.js"
+          },
           "configurations": {
             "production": {
               "browserTarget": "Trello-frontend:build:production"
@@ -85,7 +89,7 @@
               "browserTarget": "Trello-frontend:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -112,7 +116,7 @@
           }
         },
         "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
             "devServerTarget": "Trello-frontend:serve"
           },
@@ -123,14 +127,20 @@
           }
         },
         "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
+            "devServerTarget": "Trello-frontend:serve",
             "watch": true,
             "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "Trello-frontend:serve:production"
+            }
           }
         },
         "e2e": {
-          "builder": "@cypress/schematic:cypress",
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
             "devServerTarget": "Trello-frontend:serve",
             "watch": true,

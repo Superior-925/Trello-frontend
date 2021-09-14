@@ -22,6 +22,17 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
+  // addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number):Observable<responseTask> {
+  //
+  //   let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})};
+  //
+  //   let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order};
+  //   let jsonBody = JSON.stringify(body);
+  //
+  //   return this.http.post<responseTask>(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
+  //
+  // }
+
   addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number):Observable<responseTask> {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})};
@@ -33,13 +44,21 @@ export class TaskService {
 
   }
 
-  loadTasks(boardId: number): Observable<responseTask[]> {
+  loadTasks(boardId: number): Observable<any> {
 
     let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), params: {param: boardId}};
 
-    return this.http.get<responseTask[]>(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
+    return this.http.get(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
 
   }
+
+  // loadTasks(boardId: number): Observable<responseTask[]> {
+  //
+  //   let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), params: {param: boardId}};
+  //
+  //   return this.http.get<responseTask[]>(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
+  //
+  // }
 
   deleteTask(taskId: number): Observable<responseDeleteTask> {
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
@@ -147,13 +166,21 @@ export class TaskService {
 
   }
 
-  loadActionsOfTasks(boardId: number): Observable<responseActions> {
+  loadActionsOfTasks(boardId: number): Observable<any> {
 
     let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
       observe: 'response', responseType: 'text'};
 
-    return this.http.get<responseActions>(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
+    return this.http.get(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
   }
+
+  // loadActionsOfTasks(boardId: number): Observable<responseActions> {
+  //
+  //   let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+  //     observe: 'response', responseType: 'text'};
+  //
+  //   return this.http.get<responseActions>(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
+  // }
 
   loadBoardRigths(boardId: number): Observable<inviteResponseBoard> {
 

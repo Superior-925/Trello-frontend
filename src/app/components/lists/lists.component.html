@@ -584,7 +584,7 @@
             <div class="task-wrapper">
 
               <div class="task-title-wrapper" (click)="open(modalTaskTestingList); loadActionsOfTasks()">
-                <div >Title: {{item.taskTitle}}</div>
+                <div class="testing-list-task-title">Title: {{item.taskTitle}}</div>
                 <div *ngIf="showHideTitleOptions">
                 <button type="button" class="popover-button" (click)=popoverTask($event) placement="right"
                         [ngbPopover]="popover" popoverClass='content-block' [ngClass]="{invisible: !boardOwner}">
@@ -926,10 +926,10 @@
     <form [formGroup]="createTaskFormTestingList" novalidate (ngSubmit)="addTask(testingList, createTaskFormTestingList.value.taskTitle, createTaskFormTestingList)"
           class="d-flex align-items-center add-task-form">
       <div class="form-group">
-        <input type="text" class="form-control task-title" formControlName="taskTitle" placeholder="Enter task title"/>
+        <input type="text" class="form-control task-title" id="input-form-testing-list" formControlName="taskTitle" placeholder="Enter task title"/>
       </div>
       <div class="form-group d-flex">
-        <button class="btn btn-primary btn-sm add-task-form-button" [disabled]="createTaskFormTestingList.invalid">
+        <button class="btn btn-primary btn-sm add-task-form-button" id="add-task-form-button-testing-list" [disabled]="createTaskFormTestingList.invalid">
           Add task
         </button>
       </div>
@@ -940,7 +940,7 @@
 
 <ng-template #addTaskButtonTestingList>
   <div class="add-button" [ngClass]="{invisible: !boardOwner}">
-    <button type="button" class="add-task-button" (click)="addTaskStatusToggle(testingList)">Add task</button>
+    <button type="button" class="add-task-button" id="add-task-button-testing-list" (click)="addTaskStatusToggle(testingList)">Add task</button>
   </div>
 </ng-template>
 

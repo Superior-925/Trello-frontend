@@ -51,7 +51,7 @@ The application is written by HTML/CSS/TypeScript/Angular
 - Launch the applications
  
  ```sh
-$ npm start
+$ npm run start
 ```
 
 - Go to the following link http://localhost:4200
@@ -61,7 +61,13 @@ $ npm start
 - Run this command for unit testing
 
 ```sh
-$ ng test
+$ npm run test
+ ```
+
+To create a Unit testing report, run the command
+
+```sh
+$ npm run jasmine:report
  ```
 
 ## For end-to-end testing, run the commands (you also need a server)
