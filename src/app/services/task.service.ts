@@ -22,22 +22,11 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  // addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number):Observable<responseTask> {
-  //
-  //   let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})};
-  //
-  //   let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order};
-  //   let jsonBody = JSON.stringify(body);
-  //
-  //   return this.http.post<responseTask>(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
-  //
-  // }
-
-  addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number):Observable<responseTask> {
+  addTask(userId: string, boardId: number, listName: string, taskTitle: string, order: number, listNameId: number):Observable<responseTask> {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})};
 
-    let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order};
+    let body: {} = {userId: userId, boardId: boardId, listName: listName, taskTitle: taskTitle, order: order, listId: listNameId};
     let jsonBody = JSON.stringify(body);
 
     return this.http.post<responseTask>(`http://${config.development.host}:${config.development.port}/task`, jsonBody, httpOptions);
@@ -51,14 +40,6 @@ export class TaskService {
     return this.http.get(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
 
   }
-
-  // loadTasks(boardId: number): Observable<responseTask[]> {
-  //
-  //   let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), params: {param: boardId}};
-  //
-  //   return this.http.get<responseTask[]>(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
-  //
-  // }
 
   deleteTask(taskId: number): Observable<responseDeleteTask> {
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
@@ -146,9 +127,9 @@ export class TaskService {
 
   }
 
-  restoreTasks(listName: string, archivedTasks: any, boardId: number):Observable<responseRestoreTasks> {
+  restoreTasks(listId: any, archivedTasks: any, boardId: number):Observable<responseRestoreTasks> {
 
-    let body: {} = {listName: listName, archivedTasks: archivedTasks, boardId: boardId};
+    let body: {} = {listId: listId, archivedTasks: archivedTasks, boardId: boardId};
 
     let jsonBody = JSON.stringify(body);
 
@@ -158,11 +139,11 @@ export class TaskService {
 
   }
 
-  restoreSingleTask(taskId: number):Observable<responseRestoreSingleTask> {
+  restoreSingleTask(taskId: number):Observable<any> {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
-    return this.http.put<responseRestoreSingleTask>(`http://${config.development.host}:${config.development.port}/task/archive` + taskId, null, httpOptions);
+    return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive` + taskId, null, httpOptions);
 
   }
 
@@ -173,14 +154,6 @@ export class TaskService {
 
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
   }
-
-  // loadActionsOfTasks(boardId: number): Observable<responseActions> {
-  //
-  //   let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
-  //     observe: 'response', responseType: 'text'};
-  //
-  //   return this.http.get<responseActions>(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
-  // }
 
   loadBoardRigths(boardId: number): Observable<inviteResponseBoard> {
 
@@ -193,9 +166,9 @@ export class TaskService {
 
   }
 
-  taskChangeList(task: any, taskId: number) {
+  taskChangeList(task: any, taskId: number, listId: number) {
 
-    let body: {} = {task};
+    let body: {} = {task, listId: listId};
 
     let jsonBody = JSON.stringify(body);
 

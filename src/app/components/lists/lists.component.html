@@ -69,11 +69,11 @@
                 Restore tasks to one of the lists:
               </div>
               <div class="list-for-restore-block d-flex justify-content-evenly mt-2">
-                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks('To Do')">To Do</button>
-                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks('In Progress')">In Progress</button>
-                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks('Coded')">Coded</button>
-                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks('Testing')">Testing</button>
-                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks('Done')">Done</button>
+                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks(boardTodoList.id)">To Do</button>
+                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks(boardInProgressList.id)">In Progress</button>
+                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks(boardCodedList.id)">Coded</button>
+                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks(boardTestingList.id)">Testing</button>
+                <button type="button" class="btn btn-secondary restore-archive-button" [ngClass]="{invisible: !boardOwner}" (click)="restoreTasks(boardDoneList.id)">Done</button>
               </div>
             </div>
             <div class="container-fluid archived-tasks-container">

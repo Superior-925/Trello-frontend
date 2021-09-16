@@ -30,6 +30,16 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   boardOwner: boolean;
 
+  boardTodoList: object;
+
+  boardInProgressList: object;
+
+  boardCodedList: object;
+
+  boardTestingList: object;
+
+  boardDoneList: object;
+
   constructor(private boardService: BoardService, private authService: AuthService, private router: Router) {
 
     this.createBoardForm = new FormGroup({
@@ -69,11 +79,19 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   };
 
   addBoard(){
-    this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData) => {
-        let newBoard: newBoard = {boardName: responseData.body.boardName, boardId: responseData.body.id};
+    this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
+        let newBoard: newBoard = {boardName: responseData.body.board.boardName, boardId: responseData.body.board.id};
+
+        console.log(responseData.body);
+
+        this.boardTodoList = responseData.body.listTodo;
+        this.boardInProgressList = responseData.body.listInProgress;
+        this.boardCodedList = responseData.body.listCoded;
+        this.boardTestingList = responseData.body.listTesting;
+        this.boardDoneList = responseData.body.listDone;
 
         this.userBoards.push(newBoard);
-        this.selectNewBoard(responseData.body.id, responseData.body.boardName)
+        this.selectNewBoard(responseData.body.board.id, responseData.body.board.boardName)
       },
       error => console.log(error));
     this.createBoardForm.reset();

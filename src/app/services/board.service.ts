@@ -28,7 +28,23 @@ export class BoardService {
 
   }
 
-  addBoard(boardName: string): Observable<addBoardResponse> {
+  // addBoard(boardName: string): Observable<addBoardResponse> {
+  //
+  //   let httpOptions: {} = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //       'Authorization': localStorage.getItem('token') as string
+  //     }), observe: 'response'
+  //   };
+  //
+  //   let body: {} = {boardName: boardName, userId: localStorage.getItem('userId')};
+  //
+  //   let jsonBody = JSON.stringify(body);
+  //
+  //   return this.http.post<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+  // }
+
+  addBoard(boardName: string): Observable<any> {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
@@ -41,7 +57,15 @@ export class BoardService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+    return this.http.post(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
+  }
+
+  loadLists(boardId: number): Observable<any> {
+    let httpOptionsGet: {} = {
+      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})
+    };
+
+    return this.http.get(`http://${config.development.host}:${config.development.port}/board/lists/`+boardId, httpOptionsGet);
   }
 
   deleteBoard(id: number): Observable<addBoardResponse> {

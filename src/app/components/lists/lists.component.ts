@@ -16,7 +16,6 @@ import {newAction} from "../../interfaces/new-action";
 import {newFoundTask} from "../../interfaces/new-found-task";
 import {taskActionTitle} from "../../interfaces/task-action-title";
 
-
 @Component({
   selector: 'app-lists',
   templateUrl: './lists.component.html',
@@ -54,6 +53,12 @@ export class ListsComponent implements OnChanges{
   doneListTasks: newTask[] = [];
 
   @Input() boardId: number;
+
+  boardTodoList: any;
+  boardInProgressList: any;
+  boardCodedList: any;
+  boardTestingList: any;
+  boardDoneList: any;
 
   foundTasks: newFoundTask[] = [];
 
@@ -118,14 +123,21 @@ export class ListsComponent implements OnChanges{
   }
 
   ngOnChanges(): void {
+
     this.boardTasks =[];
+
+    if (this.boardId != undefined) {
+      this.loadLists();
+    }
 
     if (this.boardId != undefined) {
       this.taskService.loadTasks(this.boardId).subscribe((responseData: any) => {
 
-        responseData.forEach((list: any) => {
-           let newTask: newTask = {listName: list.listName, taskTitle: list.tasks[0].taskTitle, taskText: list.tasks[0].taskText, taskId: list.tasks[0].id, order: list.tasks[0].order};
-           this.boardTasks.push(newTask)
+          responseData.forEach((list: any) => {
+            list.tasks.forEach((task: any) => {
+              let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
+              this.boardTasks.push(newTask)
+            })
            });
 
           this.todoListTasks = this.boardTasks.filter((item:newTask) => item.listName == "To Do");
@@ -160,23 +172,33 @@ export class ListsComponent implements OnChanges{
         error => console.log(error));
     }
 
-    // if (this.boardId != undefined) {
-    //   this.taskService.loadExecutors(this.boardId).subscribe((responseData) => {
-    //       this.taskExecutors.length = 0;
-    //       let parseResp = JSON.parse(responseData.body);
-    //       parseResp.forEach((item:any) => {
-    //         item.users.forEach((user: any) => {
-    //           let newExecutor: taskExecutor = {userId: user.id, userEmail: user.email, taskId: item.id};
-    //           this.taskExecutors.push(newExecutor);
-    //         })
-    //       });
-    //     },
-    //     error => console.log(error));
-    // }
     if (this.boardId != undefined) {
       this.loadBoardRigths();
     }
   };
+
+  loadLists() {
+    this.boardService.loadLists(this.boardId).subscribe((responseData: any) => {
+
+      responseData.forEach((item: any) => {
+        if (item.listName == 'To Do') {
+          this.boardTodoList = item;
+        }
+        if (item.listName == 'In Progress') {
+          this.boardInProgressList = item;
+        }
+        if (item.listName == 'Coded') {
+          this.boardCodedList = item;
+        }
+        if (item.listName == 'Testing') {
+          this.boardTestingList = item;
+        }
+        if (item.listName == 'Done') {
+          this.boardDoneList = item;
+        }
+      });
+    })
+  }
 
   addTaskStatusToggle(listTitle: string) {
     if(listTitle == this.todoList) this.addTaskStatusTodoList = !this.addTaskStatusTodoList;
@@ -191,10 +213,9 @@ export class ListsComponent implements OnChanges{
     if (listName == "To Do") {
       let order = this.todoListTasks.length + 1;
 
-      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order)
+      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order, this.boardTodoList.id)
         .subscribe((responseData) => {
-            //console.log(responseData);
-            let newTask: newTask = {listName: responseData.list.listName, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
+            let newTask: newTask = {listName: responseData.list.listName, listId: responseData.list.id, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
             if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
             if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
             if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
@@ -207,9 +228,9 @@ export class ListsComponent implements OnChanges{
     if (listName == "In Progress") {
       let order = this.inProgressListTasks.length + 1;
 
-      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order)
+      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order, this.boardInProgressList.id)
         .subscribe((responseData) => {
-            let newTask: newTask = {listName: responseData.list.listName, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
+            let newTask: newTask = {listName: responseData.list.listName, listId: responseData.list.id, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
             if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
             if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
             if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
@@ -223,9 +244,9 @@ export class ListsComponent implements OnChanges{
     if (listName == "Coded") {
       let order = this.codedListTasks.length + 1;
 
-      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order)
+      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order, this.boardCodedList.id)
         .subscribe((responseData) => {
-            let newTask: newTask = {listName: responseData.list.listName, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
+            let newTask: newTask = {listName: responseData.list.listName, listId: responseData.list.id, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
             if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
             if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
             if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
@@ -238,9 +259,9 @@ export class ListsComponent implements OnChanges{
     if (listName == "Testing") {
       let order = this.testingListTasks.length + 1;
 
-      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order)
+      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order, this.boardTestingList.id)
         .subscribe((responseData) => {
-            let newTask: newTask = {listName: responseData.list.listName, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
+            let newTask: newTask = {listName: responseData.list.listName, listId: responseData.list.id, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
             if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
             if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
             if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
@@ -253,9 +274,9 @@ export class ListsComponent implements OnChanges{
     if (listName == "Done") {
       let order = this.doneListTasks.length + 1;
 
-      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order)
+      this.taskService.addTask(localStorage.getItem('userId') as string, this.boardId, listName, taskTitle, order, this.boardDoneList.id)
         .subscribe((responseData) => {
-            let newTask: newTask = {listName: responseData.list.listName, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
+            let newTask: newTask = {listName: responseData.list.listName, listId: responseData.list.id, taskTitle: responseData.taskTitle, taskText: responseData.taskText, taskId: responseData.id, order: responseData.order};
             if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
             if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
             if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
@@ -402,7 +423,7 @@ export class ListsComponent implements OnChanges{
 
             task.listName = 'To Do';
           }
-          this.changeTaskList(task, task.taskId);
+          this.changeTaskList(task, task.taskId, this.boardTodoList.id);
         });
       }
 
@@ -420,7 +441,7 @@ export class ListsComponent implements OnChanges{
             task.listName = 'In Progress';
 
           }
-          this.changeTaskList(task, task.taskId);
+          this.changeTaskList(task, task.taskId, this.boardInProgressList.id);
         });
       }
 
@@ -437,7 +458,7 @@ export class ListsComponent implements OnChanges{
 
             task.listName = 'Coded';
           }
-          this.changeTaskList(task, task.taskId);
+          this.changeTaskList(task, task.taskId, this.boardCodedList.id);
         });
       }
 
@@ -454,7 +475,7 @@ export class ListsComponent implements OnChanges{
 
             task.listName = 'Testing';
           }
-          this.changeTaskList(task, task.taskId);
+          this.changeTaskList(task, task.taskId, this.boardTestingList.id);
         });
       }
 
@@ -471,7 +492,7 @@ export class ListsComponent implements OnChanges{
 
             task.listName = 'Done';
           }
-          this.changeTaskList(task, task.taskId);
+          this.changeTaskList(task, task.taskId, this.boardDoneList.id);
         });
       }
 
@@ -483,9 +504,9 @@ export class ListsComponent implements OnChanges{
       error => console.log(error));
   }
 
-  changeTaskList(task: newTask, taskId: number) {
+  changeTaskList(task: newTask, taskId: number, listId: number) {
 
-    this.taskService.taskChangeList(task, taskId).subscribe(
+    this.taskService.taskChangeList(task, taskId, listId).subscribe(
       error => console.log(error));
   }
 
@@ -571,29 +592,49 @@ export class ListsComponent implements OnChanges{
 
         let parseResponse = JSON.parse(responseData.body);
         this.archivedTasks.length = 0;
-        for (let i = 0; i < parseResponse.length; i++) {
-          let newTask: newTask = {listName: parseResponse[i].listName, taskTitle: parseResponse[i].taskTitle, taskText: parseResponse[i].taskText, taskId: parseResponse[i].id, order: parseResponse[i].order};
-          this.archivedTasks.push(newTask);
-        }
+          console.log(parseResponse);
+          parseResponse.forEach((list: any) => {
+            list.tasks.forEach((task: any) => {
+              let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
+              this.archivedTasks.push(newTask);
+            })
+          })
       },
         error => console.log(error));
   };
 
-  restoreTasks(listName: string) {
+  restoreTasks(listId: any) {
     let restoreTasksArray: number[] = [];
     this.archivedTasks.forEach((item: newTask) => restoreTasksArray.push(item.taskId));
-    this.taskService.restoreTasks(listName, restoreTasksArray, this.boardId).subscribe((responseData) => {
+    this.taskService.restoreTasks(listId, restoreTasksArray, this.boardId).subscribe((responseData) => {
       let responseBody = responseData.body;
-        console.log(responseBody);
         responseBody.forEach((item: any) => {
         this.archivedTasks.length = 0;
-        let newTask: newTask = {listName: item.listName, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
 
-        if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
-        if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
-        if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
-        if (newTask.listName == "Testing") {this.testingListTasks.push(newTask)}
-        if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
+        if (item.listId === this.boardTodoList.id) {
+          let newTask: newTask = {listName: this.boardTodoList.listName, listId: item.listId, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
+          this.todoListTasks.push(newTask);
+        }
+
+          if (item.listId === this.boardInProgressList.id) {
+            let newTask: newTask = {listName: this.boardInProgressList.listName, listId: item.listId, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
+            this.inProgressListTasks.push(newTask);
+          }
+
+          if (item.listId === this.boardCodedList.id) {
+            let newTask: newTask = {listName: this.boardCodedList.listName, listId: item.listId, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
+            this.codedListTasks.push(newTask);
+          }
+
+          if (item.listId === this.boardTestingList.id) {
+            let newTask: newTask = {listName: this.boardTestingList.listName, listId: item.listId, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
+            this.testingListTasks.push(newTask);
+          }
+
+          if (item.listId === this.boardDoneList.id) {
+            let newTask: newTask = {listName: this.boardTestingList.listName, listId: item.listId, taskTitle: item.taskTitle, taskText: item.taskText, taskId: item.id, order: item.order};
+            this.doneListTasks.push(newTask);
+          }
       });
 
     },
@@ -603,13 +644,32 @@ export class ListsComponent implements OnChanges{
   restoreSingleTask (listName: string, taskId: number) {
     this.taskService.restoreSingleTask(taskId).subscribe((responseData) => {
       if (responseData.status == 200) {
-        let newTask: newTask = {listName: responseData.body.listName, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
 
-        if (newTask.listName == "To Do") {this.todoListTasks.push(newTask)}
-        if (newTask.listName == "In Progress") {this.inProgressListTasks.push(newTask)}
-        if (newTask.listName == "Coded") {this.codedListTasks.push(newTask)}
-        if (newTask.listName == "Testing") {this.testingListTasks.push(newTask)}
-        if (newTask.listName == "Done") {this.doneListTasks.push(newTask)}
+          if (responseData.body.listId === this.boardTodoList.id) {
+            let newTask: newTask = {listName: this.boardTodoList.listName, listId: responseData.body.listId, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
+            this.todoListTasks.push(newTask);
+          }
+
+          if (responseData.body.listId === this.boardInProgressList.id) {
+            let newTask: newTask = {listName: this.boardInProgressList.listName, listId: responseData.body.listId, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
+            this.inProgressListTasks.push(newTask);
+          }
+
+          if (responseData.body.listId === this.boardCodedList.id) {
+            let newTask: newTask = {listName: this.boardCodedList.listName, listId: responseData.body.listId, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
+            this.codedListTasks.push(newTask);
+          }
+
+          if (responseData.body.listId === this.boardTestingList.id) {
+            let newTask: newTask = {listName: this.boardTestingList.listName, listId: responseData.body.listId, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
+            this.testingListTasks.push(newTask);
+          }
+
+          if (responseData.body.listId === this.boardDoneList.id) {
+            let newTask: newTask = {listName: this.boardTestingList.listName, listId: responseData.body.listId, taskTitle: responseData.body.taskTitle, taskText: responseData.body.taskText, taskId: responseData.body.id, order: responseData.body.order};
+            this.doneListTasks.push(newTask);
+          }
+
         const index = this.archivedTasks.findIndex((item: newTask) => item.taskId === responseData.body.id);
         if (index !== -1) {
           this.archivedTasks.splice(index, 1);
@@ -631,11 +691,12 @@ export class ListsComponent implements OnChanges{
 
         let parseResp = (JSON.parse(responseData.body));
         this.taskActions.length = 0;
-        // console.log(parseResp);
         parseResp.forEach((list: any) => {
-          list.tasks[0].taskactions.forEach((action: any) => {
-            let newAction: newAction = {taskId: list.tasks[0].id, taskTitle: list.tasks[0].taskTitle, action: action.action, updatedAt: action.updatedAt};
-            this.taskActions.push(newAction);
+          list.tasks.forEach((task: any) => {
+            task.taskactions.forEach((action: any) => {
+              let newAction: newAction = {taskId: task.id, taskTitle: task.taskTitle, action: action.action, updatedAt: action.updatedAt};
+              this.taskActions.push(newAction);
+            })
           })
         });
     },
