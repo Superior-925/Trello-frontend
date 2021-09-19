@@ -13,6 +13,9 @@ import {responseArchiveTask} from "../interfaces/response-archive-task";
 import {responseRestoreTasks} from "../interfaces/response-restore-tasks";
 import {responseRestoreSingleTask} from "../interfaces/response-restore-single-task";
 import {inviteResponseBoard} from "../interfaces/invite-response-board";
+import {responseTasks} from "../interfaces/response-tasks";
+import {responseFoundTasks} from "../interfaces/response-found-tasks";
+import {responseBoardOwner} from "../interfaces/response-board-owner";
 
 @Injectable({
   providedIn: 'root'
@@ -33,11 +36,11 @@ export class TaskService {
 
   }
 
-  loadTasks(boardId: number): Observable<any> {
+  loadTasks(boardId: number): Observable<responseTasks[]> {
 
     let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), params: {param: boardId}};
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
+    return this.http.get<responseTasks[]>(`http://${config.development.host}:${config.development.port}/task`, httpOptionsGet);
 
   }
 
@@ -69,11 +72,11 @@ export class TaskService {
 
   }
 
-  searchTask(boardId: number, taskTitle: string): Observable<responseActions> {
+  searchTask(boardId: number, taskTitle: string): Observable<responseFoundTasks> {
     let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
-      observe: 'response',params: {boardId: boardId, taskTitle: taskTitle}, responseType: 'text'};
+      observe: 'response',params: {boardId: boardId, taskTitle: taskTitle}};
 
-    return this.http.get<responseActions>(`http://${config.development.host}:${config.development.port}/task/search`, httpOptionsGet);
+    return this.http.get<responseFoundTasks>(`http://${config.development.host}:${config.development.port}/task/search`, httpOptionsGet);
   }
 
   selectExecutor(taskId: number, userId: number, boardId: number): Observable<responseExecutor> {
@@ -88,7 +91,7 @@ export class TaskService {
 
   loadExecutors(boardId: number):Observable<responseExecutors> {
     let httpOptionsGet: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
-      observe: 'response', responseType: 'text'};
+      observe: 'response'};
 
     return this.http.get<responseExecutors>(`http://${config.development.host}:${config.development.port}/task/executor` + boardId, httpOptionsGet);
   }
@@ -139,11 +142,11 @@ export class TaskService {
 
   }
 
-  restoreSingleTask(taskId: number):Observable<any> {
+  restoreSingleTask(taskId: number):Observable<responseRestoreSingleTask> {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
-    return this.http.put(`http://${config.development.host}:${config.development.port}/task/archive` + taskId, null, httpOptions);
+    return this.http.put<responseRestoreSingleTask>(`http://${config.development.host}:${config.development.port}/task/archive` + taskId, null, httpOptions);
 
   }
 
@@ -155,14 +158,14 @@ export class TaskService {
     return this.http.get(`http://${config.development.host}:${config.development.port}/task/actions` + boardId, httpOptionsGet);
   }
 
-  loadBoardRigths(boardId: number): Observable<inviteResponseBoard> {
+  loadBoardRigths(boardId: number): Observable<responseBoardOwner> {
 
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
-      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
+      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}
     };
 
-    return this.http.get<inviteResponseBoard>(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
+    return this.http.get<responseBoardOwner>(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
 
   }
 

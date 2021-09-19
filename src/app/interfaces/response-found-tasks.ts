@@ -1,4 +1,4 @@
-export interface responseExecutors {
+export interface responseFoundTasks {
   body: [{
     id: number,
     listName: string,
@@ -7,10 +7,7 @@ export interface responseExecutors {
       taskText: string,
       id: number,
       order: number
-      users: [{
-        email: string,
-        id: number
-      }]
     }]
   }]
 }
+

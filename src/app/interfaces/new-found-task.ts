@@ -3,7 +3,7 @@ export interface newFoundTask {
   taskTitle: string,
   taskText: string,
   id: number,
-  archived: boolean,
+  archived?: boolean,
   order: number
 }
 

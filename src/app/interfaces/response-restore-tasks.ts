@@ -1,3 +1,11 @@
 export interface responseRestoreTasks {
-  body: []
+  body: [
+    {
+      id: number,
+      listId: number,
+      order: number,
+      taskTitle: string,
+      taskText: string
+    }
+  ]
 }

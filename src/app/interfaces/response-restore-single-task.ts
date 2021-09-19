@@ -1,6 +1,6 @@
 export interface responseRestoreSingleTask {
   body: {
-    listName: string,
+    listId: number,
     taskTitle: string,
     taskText: string,
     id: number,

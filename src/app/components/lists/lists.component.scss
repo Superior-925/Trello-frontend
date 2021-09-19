@@ -374,6 +374,7 @@
   padding-bottom: 0.3rem;
   padding-left: 0.3rem;
   margin: auto;
+  height: 2rem;
   width: 90%;
   font-weight: bold;
   cursor: pointer;
@@ -389,6 +390,9 @@
 }
 
 .popover-button{
+  display: flex;
+  align-items: center;
+  height: 1.5rem;
   visibility: hidden;
   border: none;
   background-color: white;

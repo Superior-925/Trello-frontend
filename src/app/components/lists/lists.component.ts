@@ -15,6 +15,7 @@ import {newExecutor} from "../../interfaces/new-executor";
 import {newAction} from "../../interfaces/new-action";
 import {newFoundTask} from "../../interfaces/new-found-task";
 import {taskActionTitle} from "../../interfaces/task-action-title";
+import {boardList} from "../../interfaces/board-list";
 
 @Component({
   selector: 'app-lists',
@@ -54,11 +55,11 @@ export class ListsComponent implements OnChanges{
 
   @Input() boardId: number;
 
-  boardTodoList: any;
-  boardInProgressList: any;
-  boardCodedList: any;
-  boardTestingList: any;
-  boardDoneList: any;
+  boardTodoList: boardList;
+  boardInProgressList: boardList;
+  boardCodedList: boardList;
+  boardTestingList: boardList;
+  boardDoneList: boardList;
 
   foundTasks: newFoundTask[] = [];
 
@@ -114,8 +115,8 @@ export class ListsComponent implements OnChanges{
 
   }
 
-  sortTasks(taskArray: any) {
-    taskArray.sort( ( a: any, b: any) => {
+  sortTasks(taskArray: newTask[]) {
+    taskArray.sort( ( a: newTask, b: newTask) => {
       if (a.order < b.order) return -1;
       if (a.order > b.order) return 1;
       return 0;
@@ -126,15 +127,20 @@ export class ListsComponent implements OnChanges{
 
     this.boardTasks =[];
 
+    this.addTaskStatusTodoList = true;
+    this.addTaskStatusProgressList = true;
+    this.addTaskStatusCodedList = true;
+    this.addTaskStatusTestingList = true;
+    this.addTaskStatusDoneList = true;
+
     if (this.boardId != undefined) {
       this.loadLists();
     }
 
     if (this.boardId != undefined) {
-      this.taskService.loadTasks(this.boardId).subscribe((responseData: any) => {
-
-          responseData.forEach((list: any) => {
-            list.tasks.forEach((task: any) => {
+      this.taskService.loadTasks(this.boardId).subscribe((responseData) => {
+          responseData.forEach((list) => {
+            list.tasks.forEach((task) => {
               let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
               this.boardTasks.push(newTask)
             })
@@ -173,14 +179,29 @@ export class ListsComponent implements OnChanges{
     }
 
     if (this.boardId != undefined) {
+      this.taskService.loadExecutors(this.boardId).subscribe((responseData) => {
+          this.taskExecutors.length = 0;
+          responseData.body.forEach((list) => {
+            list.tasks.forEach((task) => {
+              task.users.forEach((user) => {
+                let newExecutor: taskExecutor = {userId: user.id, userEmail: user.email, taskId: task.id};
+                this.taskExecutors.push(newExecutor);
+              });
+            })
+          });
+        },
+        error => console.log(error));
+    }
+
+    if (this.boardId != undefined) {
       this.loadBoardRigths();
     }
   };
 
   loadLists() {
-    this.boardService.loadLists(this.boardId).subscribe((responseData: any) => {
+    this.boardService.loadLists(this.boardId).subscribe((responseData) => {
 
-      responseData.forEach((item: any) => {
+      responseData.forEach((item: boardList) => {
         if (item.listName == 'To Do') {
           this.boardTodoList = item;
         }
@@ -326,7 +347,7 @@ export class ListsComponent implements OnChanges{
   deleteAllTasks(tasksArray: newTask[]) {
     if(confirm("Are you sure you want to delete all tasks in the list?")) {
       let idsForDelete: number[] = [];
-      tasksArray.forEach((item: any) => idsForDelete.push(item.taskId));
+      tasksArray.forEach((item: newTask) => idsForDelete.push(item.taskId));
       this.taskService.deleteAllTasks(idsForDelete).subscribe((responseData) => {
         if (responseData.status == 200) {
           tasksArray.length = 0;
@@ -339,10 +360,11 @@ export class ListsComponent implements OnChanges{
   searchTask(taskTitle: string, formGroup: any) {
     this.taskService.searchTask(this.boardId, taskTitle).subscribe((responseData) => {
         this.foundTasks.length = 0;
-        let foundTasks = JSON.parse(responseData.body);
-        foundTasks.forEach((item: newFoundTask) => {
-          let newFoundTask: newFoundTask = {listName: item.listName, taskTitle: item.taskTitle, taskText: item.taskText, id: item.id, archived: item.archived, order: item.order};
-          this.foundTasks.push(newFoundTask);
+        responseData.body.forEach((list) => {
+          list.tasks.forEach((task) => {
+            let newFoundTask: newFoundTask = {listName: list.listName, taskTitle: task.taskTitle, taskText: task.taskText, id: task.id, order: task.order};
+            this.foundTasks.push(newFoundTask);
+          });
         });
     },
       error => console.log(error));
@@ -603,12 +625,11 @@ export class ListsComponent implements OnChanges{
         error => console.log(error));
   };
 
-  restoreTasks(listId: any) {
+  restoreTasks(listId: number) {
     let restoreTasksArray: number[] = [];
     this.archivedTasks.forEach((item: newTask) => restoreTasksArray.push(item.taskId));
     this.taskService.restoreTasks(listId, restoreTasksArray, this.boardId).subscribe((responseData) => {
-      let responseBody = responseData.body;
-        responseBody.forEach((item: any) => {
+        responseData.body.forEach((item) => {
         this.archivedTasks.length = 0;
 
         if (item.listId === this.boardTodoList.id) {
@@ -680,8 +701,7 @@ export class ListsComponent implements OnChanges{
 
   loadBoardRigths() {
     this.taskService.loadBoardRigths(this.boardId).subscribe((responseData) => {
-      let responseParse = JSON.parse(responseData.body);
-      this.boardOwner = responseParse.owner;
+        this.boardOwner = responseData.body.owner;
     },
       error => console.log(error))
   };
@@ -713,13 +733,17 @@ export class ListsComponent implements OnChanges{
     }
   };
 
-  timerToken = setInterval(() => this.authService.refreshTokens().subscribe((responseData) => {
-    localStorage.removeItem('refresh');
-    localStorage.removeItem('token');
+  timerToken = setInterval(() => {
+    if (localStorage.getItem('token')) {
+      this.authService.refreshTokens().subscribe((responseData) => {
+        localStorage.removeItem('refresh');
+        localStorage.removeItem('token');
 
-    localStorage.setItem('refresh', responseData.body.refresh.token);
-    localStorage.setItem('token', responseData.body.token);
-  }), 30000);
+        localStorage.setItem('refresh', responseData.body.refresh.token);
+        localStorage.setItem('token', responseData.body.token);
+      })
+    }
+    }, 120000);
 
   stopRefresh() {
     clearTimeout(this.timerToken)

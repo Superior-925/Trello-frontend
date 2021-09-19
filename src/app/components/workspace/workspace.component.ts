@@ -82,8 +82,6 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
     this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
         let newBoard: newBoard = {boardName: responseData.body.board.boardName, boardId: responseData.body.board.id};
 
-        console.log(responseData.body);
-
         this.boardTodoList = responseData.body.listTodo;
         this.boardInProgressList = responseData.body.listInProgress;
         this.boardCodedList = responseData.body.listCoded;
@@ -145,8 +143,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   loadBoardRigth() {
     if (this.boardId != undefined) {
       this.boardService.loadBoardRigth(this.boardId).subscribe((responseData) => {
-          let responseParse = JSON.parse(responseData.body);
-          this.boardOwner = responseParse.owner;
+          this.boardOwner = responseData.body.owner;
         },
         error => console.log(error));
     }

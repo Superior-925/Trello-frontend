@@ -14,7 +14,7 @@ The app allows:
 - Move tasks on the board
 - Archive and restore tasks
 - View archived tasks
-- Search for tasks on the board
+- Search for tasks on the board(enter part of the task title or the title in full)
 - To search for user tasks, enter the user's mail. The first character is @. Example: @asd@gmail.com.
 - View the history of actions on board tasks
 - Invite other app users to the board

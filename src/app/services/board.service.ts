@@ -7,6 +7,8 @@ import {responseBoard} from '../interfaces/response-board';
 import {addBoardResponse} from '../interfaces/add-board-response';
 import {responseInvitedUsers} from '../interfaces/response-invited-users';
 import {inviteResponseBoard} from '../interfaces/invite-response-board';
+import {boardList} from "../interfaces/board-list";
+import {responseBoardOwner} from "../interfaces/response-board-owner";
 
 @Injectable({providedIn: 'root'})
 
@@ -60,12 +62,12 @@ export class BoardService {
     return this.http.post(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
   }
 
-  loadLists(boardId: number): Observable<any> {
+  loadLists(boardId: number): Observable<boardList[]> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})
     };
 
-    return this.http.get(`http://${config.development.host}:${config.development.port}/board/lists/`+boardId, httpOptionsGet);
+    return this.http.get<boardList[]>(`http://${config.development.host}:${config.development.port}/board/lists/`+boardId, httpOptionsGet);
   }
 
   deleteBoard(id: number): Observable<addBoardResponse> {
@@ -131,14 +133,14 @@ export class BoardService {
   }
 
 
-  loadBoardRigth(boardId: number): Observable<inviteResponseBoard> {
+  loadBoardRigth(boardId: number): Observable<responseBoardOwner> {
 
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
-      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}, responseType: 'text'
+      observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}
     };
 
-    return this.http.get<inviteResponseBoard>(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
+    return this.http.get<responseBoardOwner>(`http://${config.development.host}:${config.development.port}/board/rights`, httpOptionsGet);
 
   }
 

@@ -38,7 +38,6 @@ export class SignupPageComponent {
 
   submit(){
     this.authService.signUp(this.signUpForm.value.email, this.signUpForm.value.password).subscribe((responseData) => {
-        console.log(responseData);
         localStorage.setItem('token', responseData.body.token);
         localStorage.setItem('refresh', responseData.body.refresh.token);
         localStorage.setItem('userId', responseData.body.userId);
