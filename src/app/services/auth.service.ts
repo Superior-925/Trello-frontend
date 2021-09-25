@@ -22,6 +22,15 @@ export class AuthService implements OnInit{
 
   }
 
+  refresh() {
+
+    const body = {refreshToken: localStorage.getItem('refresh')};
+
+    let jsonBody = JSON.stringify(body);
+
+    return this.http.post(`http://${config.development.host}:${config.development.port}/refresh`, jsonBody, httpOptions)
+  }
+
   refreshTokens(): Observable<responseRefreshToken> {
 
     const body = {refreshToken: localStorage.getItem('refresh')};

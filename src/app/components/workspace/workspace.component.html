@@ -26,8 +26,9 @@
           <a class="nav-link dropdown-toggle nav-link-select-board" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Select board
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown" *ngIf="userBoards.length; then haveBoards else noBoards">
-          </div>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" [ngClass]="{invisible: noBoards}">
+            <li><a class="dropdown-item" *ngFor="let item of userBoards" (click)="selectBoard(item.boardId, item.boardName)">{{item.boardName}}</a></li>
+          </ul>
         </li>
         <div class="rename-delete-block">
           <div class="form-group rename-board">
@@ -47,18 +48,6 @@
     </div>
   </div>
 </nav>
-
-  <ng-template #haveBoards>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item" *ngFor="let item of userBoards" (click)="selectBoard(item.boardId, item.boardName)">{{item.boardName}}</a></li>
-    </ul>
-  </ng-template>
-
-  <ng-template #noBoards>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item">No boards</a></li>
-    </ul>
-  </ng-template>
 
 </header>
 

@@ -14,7 +14,6 @@ import {newInvitedUser} from "../../interfaces/new-invited-user";
 import {newExecutor} from "../../interfaces/new-executor";
 import {newAction} from "../../interfaces/new-action";
 import {newFoundTask} from "../../interfaces/new-found-task";
-import {taskActionTitle} from "../../interfaces/task-action-title";
 import {boardList} from "../../interfaces/board-list";
 
 @Component({
@@ -53,7 +52,7 @@ export class ListsComponent implements OnChanges{
   testingListTasks: newTask[] = [];
   doneListTasks: newTask[] = [];
 
-  @Input() boardId: number;
+  @Input() boardId: any;
 
   boardTodoList: boardList;
   boardInProgressList: boardList;
@@ -78,8 +77,6 @@ export class ListsComponent implements OnChanges{
   showHideTitleOptions: boolean = true;
 
   userId: any = localStorage.getItem('userId');
-
-  counter = 0;
 
   constructor(private taskService: TaskService, private boardService: BoardService, private modalService: NgbModal, private router: Router, private authService: AuthService) {
     this.createTaskFormTodoList = new FormGroup({
@@ -133,39 +130,57 @@ export class ListsComponent implements OnChanges{
     this.addTaskStatusTestingList = true;
     this.addTaskStatusDoneList = true;
 
-    if (this.boardId != undefined) {
+    if (this.boardId != undefined && this.boardId != -1) {
       this.loadLists();
     }
 
     if (this.boardId != undefined) {
-      this.taskService.loadTasks(this.boardId).subscribe((responseData) => {
-          responseData.forEach((list) => {
-            list.tasks.forEach((task) => {
-              let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
-              this.boardTasks.push(newTask)
-            })
-           });
 
-          this.todoListTasks = this.boardTasks.filter((item:newTask) => item.listName == "To Do");
-          this.sortTasks(this.todoListTasks);
+      if (this.boardId == -1) {
+        this.todoListTasks.length = 0;
+        this.inProgressListTasks.length = 0;
+        this.codedListTasks.length = 0;
+        this.testingListTasks.length = 0;
+        this.doneListTasks.length = 0;
 
-          this.inProgressListTasks = this.boardTasks.filter((item:newTask) => item.listName == "In Progress");
-          this.sortTasks(this.inProgressListTasks);
+        this.addTaskStatusTodoList = true;
+        this.addTaskStatusProgressList = true;
+        this.addTaskStatusCodedList = true;
+        this.addTaskStatusTestingList = true;
+        this.addTaskStatusDoneList = true;
+      }
 
-          this.codedListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Coded");
-          this.sortTasks(this.codedListTasks);
+      if (this.boardId != -1) {
+        this.taskService.loadTasks(this.boardId).subscribe((responseData) => {
 
-          this.testingListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Testing");
-          this.sortTasks(this.testingListTasks);
+            responseData.forEach((list) => {
+              list.tasks.forEach((task) => {
+                let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
+                this.boardTasks.push(newTask)
+              })
+            });
 
-          this.doneListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Done");
-          this.sortTasks(this.doneListTasks);
+            this.todoListTasks = this.boardTasks.filter((item:newTask) => item.listName == "To Do");
+            this.sortTasks(this.todoListTasks);
 
-        },
-        error => console.log(error));
+            this.inProgressListTasks = this.boardTasks.filter((item:newTask) => item.listName == "In Progress");
+            this.sortTasks(this.inProgressListTasks);
+
+            this.codedListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Coded");
+            this.sortTasks(this.codedListTasks);
+
+            this.testingListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Testing");
+            this.sortTasks(this.testingListTasks);
+
+            this.doneListTasks = this.boardTasks.filter((item:newTask) => item.listName == "Done");
+            this.sortTasks(this.doneListTasks);
+
+          },
+          error => console.log(error));
+      }
     }
 
-    if (this.boardId != undefined) {
+    if (this.boardId != undefined && this.boardId != -1) {
       this.boardService.loadInvitedUsers(this.boardId).subscribe((responseData) => {
           this.boardMembers.length = 0;
           let responseInvitedUsers = JSON.parse(responseData.body);
@@ -178,7 +193,7 @@ export class ListsComponent implements OnChanges{
         error => console.log(error));
     }
 
-    if (this.boardId != undefined) {
+    if (this.boardId != undefined && this.boardId != -1) {
       this.taskService.loadExecutors(this.boardId).subscribe((responseData) => {
           this.taskExecutors.length = 0;
           responseData.body.forEach((list) => {
@@ -193,7 +208,7 @@ export class ListsComponent implements OnChanges{
         error => console.log(error));
     }
 
-    if (this.boardId != undefined) {
+    if (this.boardId != undefined && this.boardId != -1) {
       this.loadBoardRigths();
     }
   };
@@ -522,13 +537,17 @@ export class ListsComponent implements OnChanges{
   };
 
   taskOrder(taskId: number, taskOrder: number, listName: string) {
-    this.taskService.taskOrder(taskId, taskOrder).subscribe(
+    this.taskService.taskOrder(taskId, taskOrder).subscribe((responseData: any) => {
+
+    },
       error => console.log(error));
   }
 
   changeTaskList(task: newTask, taskId: number, listId: number) {
 
-    this.taskService.taskChangeList(task, taskId, listId).subscribe(
+    this.taskService.taskChangeList(task, taskId, listId).subscribe((responseData: any) => {
+
+    },
       error => console.log(error));
   }
 
@@ -614,7 +633,6 @@ export class ListsComponent implements OnChanges{
 
         let parseResponse = JSON.parse(responseData.body);
         this.archivedTasks.length = 0;
-          console.log(parseResponse);
           parseResponse.forEach((list: any) => {
             list.tasks.forEach((task: any) => {
               let newTask: newTask = {listName: list.listName, listId: list.id, taskTitle: task.taskTitle, taskText: task.taskText, taskId: task.id, order: task.order};
@@ -741,9 +759,17 @@ export class ListsComponent implements OnChanges{
 
         localStorage.setItem('refresh', responseData.body.refresh.token);
         localStorage.setItem('token', responseData.body.token);
-      })
+      },
+        error =>
+        {
+          console.log(error);
+          if (error.status == 406) {
+            this.router.navigate(['/home']);
+          }
+        }
+      )
     }
-    }, 120000);
+    }, 180000);
 
   stopRefresh() {
     clearTimeout(this.timerToken)

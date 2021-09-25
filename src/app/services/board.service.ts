@@ -22,7 +22,7 @@ export class BoardService {
   loadBoards(): Observable<responseBoard> {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', params: {param: localStorage.getItem('userId')}, responseType: 'text'
     };
 
@@ -30,28 +30,11 @@ export class BoardService {
 
   }
 
-  // addBoard(boardName: string): Observable<addBoardResponse> {
-  //
-  //   let httpOptions: {} = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': localStorage.getItem('token') as string
-  //     }), observe: 'response'
-  //   };
-  //
-  //   let body: {} = {boardName: boardName, userId: localStorage.getItem('userId')};
-  //
-  //   let jsonBody = JSON.stringify(body);
-  //
-  //   return this.http.post<addBoardResponse>(`http://${config.development.host}:${config.development.port}/board`, jsonBody, httpOptions);
-  // }
-
   addBoard(boardName: string): Observable<any> {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token') as string
+        'Content-Type': 'application/json'
       }), observe: 'response'
     };
 
@@ -64,7 +47,7 @@ export class BoardService {
 
   loadLists(boardId: number): Observable<boardList[]> {
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string})
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
 
     return this.http.get<boardList[]>(`http://${config.development.host}:${config.development.port}/board/lists/`+boardId, httpOptionsGet);
@@ -73,7 +56,7 @@ export class BoardService {
   deleteBoard(id: number): Observable<addBoardResponse> {
 
     let httpOptionsDelete: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', params: {boardId: id, userId: localStorage.getItem('userId')}
     };
 
@@ -88,8 +71,7 @@ export class BoardService {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token') as string
+        'Content-Type': 'application/json'
       }), observe: 'response'
     };
 
@@ -100,8 +82,7 @@ export class BoardService {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token') as string
+        'Content-Type': 'application/json'
       }), observe: 'response'
     };
 
@@ -116,7 +97,7 @@ export class BoardService {
   invite(link: string, userId: any) {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', params: {userId: userId}, responseType: 'text'
     };
 
@@ -125,7 +106,7 @@ export class BoardService {
 
   loadInvitedUsers(boardId: number): Observable<responseInvitedUsers> {
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', responseType: 'text'
     };
 
@@ -136,7 +117,7 @@ export class BoardService {
   loadBoardRigth(boardId: number): Observable<responseBoardOwner> {
 
     let httpOptionsGet: {} = {
-      headers: new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', params: {userId: localStorage.getItem('userId'), boardId: boardId}
     };
 

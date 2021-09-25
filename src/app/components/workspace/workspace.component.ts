@@ -22,7 +22,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   boardName: string = '';
 
-  boardId: number;
+  boardId: any;
 
   newBoardName: string = '';
 
@@ -39,6 +39,8 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   boardTestingList: object;
 
   boardDoneList: object;
+
+  noBoards: boolean;
 
   constructor(private boardService: BoardService, private authService: AuthService, private router: Router) {
 
@@ -65,8 +67,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
         }
 
         if (this.userBoards.length) {
+          this.noBoards = false;
           this.boardName = this.userBoards[0].boardName;
           this.boardId = this.userBoards[0].boardId;
+        }
+        if (this.userBoards.length == 0) {
+          this.noBoards = true;
         }
         this.loadBoardRigth();
       },
@@ -80,6 +86,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   addBoard(){
     this.boardService.addBoard(this.createBoardForm.value.board).subscribe((responseData: any) => {
+        this.noBoards = false;
         let newBoard: newBoard = {boardName: responseData.body.board.boardName, boardId: responseData.body.board.id};
 
         this.boardTodoList = responseData.body.listTodo;
@@ -112,9 +119,12 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
         this.userBoards = filterUserBoards;
 
         if (this.userBoards.length) {
-          this.selectNewBoard(this.userBoards[0].boardId, this.userBoards[0].boardName)}
-        else {this.boardName = 'No boards'}
-
+          this.selectNewBoard(this.userBoards[0].boardId, this.userBoards[0].boardName)
+        }
+          if (this.userBoards.length == 0) {
+            this.noBoards = true;
+            this.selectNewBoard(-1, 'No boards')
+          }
       },
         error => console.log(error));
     }
@@ -126,7 +136,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
     this.loadBoardRigth();
   };
 
-  selectNewBoard(id: number, board: string) {
+  selectNewBoard(id: any, board: string) {
     this.boardName = board;
     this.boardId = id;
     this.loadBoardRigth();
@@ -141,14 +151,11 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   };
 
   loadBoardRigth() {
-    if (this.boardId != undefined) {
+    if (this.boardId != undefined && this.boardId != -1) {
       this.boardService.loadBoardRigth(this.boardId).subscribe((responseData) => {
           this.boardOwner = responseData.body.owner;
         },
         error => console.log(error));
     }
   };
-
-
-
 }

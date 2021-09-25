@@ -23,6 +23,13 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
+import { AuthInterceptor } from "./auth.interceptor";
+
+const INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  multi: true,
+  useClass: AuthInterceptor
+};
 
 @NgModule({
   declarations: [
@@ -63,7 +70,8 @@ import { GoogleLoginProvider } from 'angularx-social-login';
           },
         ]
       } as SocialAuthServiceConfig,
-    }
+    },
+    INTERCEPTOR_PROVIDER
   ],
   bootstrap: [AppComponent]
 })
