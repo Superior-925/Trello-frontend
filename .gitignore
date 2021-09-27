@@ -47,5 +47,6 @@ Thumbs.db
 # Cypress
 
 /cypress/videos
+.nyc_output
 
 
