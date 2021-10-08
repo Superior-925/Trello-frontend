@@ -1,7 +1,7 @@
 #  Trello-clone application(client side)
 ![](./trello-home-example.png)
 
-![](./example-screenshot.png)
+![](./new-example-screenshot.png)
 
 # This Trello-clone app is an example of a kanban-board.
 The app allows:
