@@ -1,0 +1,58 @@
+#board-add-form {
+  height: 3rem;
+}
+
+#open-modal-button {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  width: 23%;
+  height: 7rem;
+  font-size: 1.5rem;
+}
+
+#submit-button {
+  margin-left: 1rem;
+}
+
+.boards-block {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.boards-block-title {
+  margin-bottom: 0.5rem;
+}
+
+.boards-block-items {
+
+  padding-left: 1rem;
+  padding-top: 1rem;
+  border: solid 1px black;
+  border-radius: 5px;
+  width: 53rem;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.user-board-item {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  width: 23%;
+  height: 7rem;
+  font-size: 1.5rem;
+}
+
+.trello-logo {
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+ .btn-delete-position {
+   display: flex;
+   position: absolute;
+   z-index:  100;
+   margin-left: 140px;
+ }
+

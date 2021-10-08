@@ -16,7 +16,7 @@ describe('Registration page', () => {
 
     cy.wait(1000);
 
-    cy.get('div[class="log-out-button-block"]').should('exist');
+    cy.get('div[class="trello-logo"]').should('exist');
 
   });
 
@@ -34,15 +34,21 @@ describe('Registration page', () => {
 
     cy.wait(1000);
 
-    cy.get('div[class="log-out-button-block"]').should('exist');
-
-    cy.get('input[id="board-add-form"]').type(board);
+    cy.get('[id="open-modal-button"]').click();
 
     cy.wait(1000);
 
+    cy.get('input[id="board-add-form"]').type(board);
+
     cy.get('[id="submit-button"]').click();
 
-    cy.get('input[name="board-name"]').should('have.value', board);
+    cy.wait(1000);
+
+    cy.get('[id="close-modal-button"]').click();
+
+    cy.wait(1000);
+
+    cy.get('button[class="btn btn-warning user-board-item"]').contains(board).should('exist');
 
   });
 

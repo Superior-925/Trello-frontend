@@ -24,6 +24,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
 import { AuthInterceptor } from "./auth.interceptor";
+import { BoardsComponent } from './components/boards/boards.component';
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -41,6 +42,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     WorkspaceComponent,
     ListsComponent,
     LinkPageComponent,
+    BoardsComponent,
   ],
   imports: [
     BrowserModule,

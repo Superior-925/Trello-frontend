@@ -42,7 +42,7 @@ export class SignupPageComponent {
         localStorage.setItem('refresh', responseData.body.refresh.token);
         localStorage.setItem('userId', responseData.body.userId);
         if (responseData.status == 200) {
-          this.router.navigate(['/workspace']);
+          this.router.navigate(['/boards']);
         }
       },
       error => {
@@ -72,7 +72,7 @@ export class SignupPageComponent {
                 localStorage.setItem('token', responseData.body.token);
                 localStorage.setItem('refresh', responseData.body.refresh.token);
                 localStorage.setItem('userId', responseData.body.userId);
-                this.router.navigate(['/workspace']);
+                this.router.navigate(['/boards']);
               }
             },
             error => console.log(error));

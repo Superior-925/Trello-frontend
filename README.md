@@ -24,7 +24,7 @@ The app allows:
 
 ## Application Technology Stack
 
-The application is written by HTML/CSS/TypeScript/Angular
+The application is written by HTML/SCSS/TypeScript/Angular
 
 # To launch the app, you need to:
 

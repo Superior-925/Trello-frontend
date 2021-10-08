@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import {HttpClientModule} from "@angular/common/http";
-
 import { HomePageComponent } from './home-page.component';
 
 describe('HomePageComponent', () => {
@@ -18,7 +17,6 @@ describe('HomePageComponent', () => {
   });
 
   beforeEach(() => {
-    //component = new HomePageComponent(router, auth);
     fixture = TestBed.createComponent(HomePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

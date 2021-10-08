@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthService} from "../../services/auth.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: 'app-home-page',
@@ -19,7 +19,7 @@ export class HomePageComponent implements OnInit {
 
         localStorage.setItem('refresh', responseData.body.refresh.token);
         localStorage.setItem('token', responseData.body.token);
-        this.router.navigate(['/workspace']);
+        this.router.navigate(['/boards']);
       })
     }
   }

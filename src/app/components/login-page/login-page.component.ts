@@ -44,7 +44,7 @@ export class LoginPageComponent implements OnInit{
           localStorage.setItem('token', responseData.body.token);
           localStorage.setItem('refresh', responseData.body.refresh.token);
           localStorage.setItem('userId', responseData.body.userId);
-        this.router.navigate(['/workspace']);
+        this.router.navigate(['/boards']);
         }
       },
       error =>
@@ -75,7 +75,7 @@ export class LoginPageComponent implements OnInit{
                 localStorage.setItem('token', responseData.body.token);
                 localStorage.setItem('refresh', responseData.body.refresh.token);
                 localStorage.setItem('userId', responseData.body.userId);
-                this.router.navigate(['/workspace']);
+                this.router.navigate(['/boards']);
               }
             },
             error => console.log(error));

@@ -36,6 +36,7 @@
           </div>
           <button type="button" class="btn btn-primary delete-board-button" [ngClass]="{invisible: !boardOwner}" (click)="deleteBoard()">Delete board</button>
         </div>
+        <button class="btn btn-secondary back-to-boards-btn" [routerLink]="['/boards']">Back to boards</button>
       </ul>
 
       <nav class="navbar navbar-light bg-light trello-logo">

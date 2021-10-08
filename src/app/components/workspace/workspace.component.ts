@@ -5,8 +5,9 @@ import {AfterViewInit} from "@angular/core";
 import {OnChanges} from "@angular/core";
 import {OnInit} from "@angular/core";
 import {AuthService} from "../../services/auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {newBoard} from "../../interfaces/new-board";
+import {switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-workspace',
@@ -42,7 +43,7 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
   noBoards: boolean;
 
-  constructor(private boardService: BoardService, private authService: AuthService, private router: Router) {
+  constructor(private boardService: BoardService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
 
     this.createBoardForm = new FormGroup({
       board: new FormControl('', [
@@ -68,8 +69,15 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
 
         if (this.userBoards.length) {
           this.noBoards = false;
-          this.boardName = this.userBoards[0].boardName;
-          this.boardId = this.userBoards[0].boardId;
+          this.route.params.subscribe((params: Params) => {
+            this.boardId = params['id']
+          });
+          let findBoard = this.userBoards.find((item) =>
+            item.boardId == this.boardId
+        );
+          if (findBoard) {
+            this.boardName = findBoard.boardName;
+          }
         }
         if (this.userBoards.length == 0) {
           this.noBoards = true;
@@ -133,12 +141,14 @@ export class WorkspaceComponent implements OnChanges, AfterViewInit, OnInit{
   selectBoard(id: number, board: string) {
     this.boardName = board;
     this.boardId = id;
+    this.router.navigate(['/workspace', id]);
     this.loadBoardRigth();
   };
 
   selectNewBoard(id: any, board: string) {
     this.boardName = board;
     this.boardId = id;
+    this.router.navigate(['/workspace', id]);
     this.loadBoardRigth();
   };
 

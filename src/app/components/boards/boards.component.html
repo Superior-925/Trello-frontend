@@ -1,0 +1,45 @@
+<header>
+  <div class="trello-logo"><img src="assets/trello-logo.jpg" alt="" width="120"></div>
+</header>
+
+<main>
+  <div class="boards-block">
+    <div class="boards-block-title fw-bold fs-4">Please create or select board</div>
+    <div class="boards-block-items">
+      <button class="btn btn-primary" id="open-modal-button" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#board-create-modal">Create board</button>
+      <button class="btn btn-warning user-board-item" *ngFor="let item of userBoards" [routerLink]="['/workspace', item.boardId]">
+        {{item.boardName}}
+        <button type="button" class="btn-close btn-delete-position" (click)="deleteBoard($event, item.boardId)"></button>
+      </button>
+    </div>
+  </div>
+</main>
+
+
+<div class="modal fade" id="board-create-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create board</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="add-board-form">
+            <form [formGroup]="createBoardForm" novalidate (ngSubmit)="addBoard()" class="d-flex align-items-center justify-content-center">
+              <div class="form-group">
+                <input type="text" id="board-add-form" class="form-control add-board-form" formControlName="board" placeholder="Enter board name"/>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-default btn btn-primary btn-lg btn-block" id="submit-button" [disabled]="createBoardForm.invalid">
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close-modal-button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 import {responseStatus} from "../interfaces/response-status";
 import {responseRefreshToken} from "../interfaces/response-refresh-token";
 import {responseUserData} from "../interfaces/response-user-data";
-import {responseDeleteTask} from "../interfaces/response-delete-task";
+import {Router} from "@angular/router";
 
 const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}), observe: 'response'};
 
@@ -16,19 +16,12 @@ const httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'applicatio
 
 export class AuthService implements OnInit{
 
-  constructor(private http: HttpClient){ }
+  timerToken: any;
+
+  constructor(private http: HttpClient, private router: Router){ }
 
   ngOnInit(): void {
 
-  }
-
-  refresh() {
-
-    const body = {refreshToken: localStorage.getItem('refresh')};
-
-    let jsonBody = JSON.stringify(body);
-
-    return this.http.post(`http://${config.development.host}:${config.development.port}/refresh`, jsonBody, httpOptions)
   }
 
   refreshTokens(): Observable<responseRefreshToken> {
@@ -78,6 +71,33 @@ export class AuthService implements OnInit{
 
     return this.http.post<responseStatus>(`http://${config.development.host}:${config.development.port}/logout`, jsonBody, httpOptions);
   }
+
+
+  startRefresh() {
+    this.timerToken = setInterval(() => {
+      if (localStorage.getItem('token')) {
+        this.refreshTokens().subscribe((responseData) => {
+            localStorage.removeItem('refresh');
+            localStorage.removeItem('token');
+
+            localStorage.setItem('refresh', responseData.body.refresh.token);
+            localStorage.setItem('token', responseData.body.token);
+          },
+          error =>
+          {
+            console.log(error);
+            if (error.status == 406) {
+              this.router.navigate(['/home']);
+            }
+          }
+        )
+      }
+    }, 180000);
+  }
+
+  stopRefresh() {
+      clearTimeout(this.timerToken)
+    }
 
 }
 

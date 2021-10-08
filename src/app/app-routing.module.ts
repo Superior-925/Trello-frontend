@@ -6,12 +6,14 @@ import {LoginPageComponent} from "./components/login-page/login-page.component";
 import {PageNotFoundComponent} from "./components/page-not-found/page-not-found.component";
 import {WorkspaceComponent} from "./components/workspace/workspace.component";
 import {LinkPageComponent} from "./components/link-page/link-page.component";
+import {BoardsComponent} from "./components/boards/boards.component";
 
 const appRoutes: Routes =[
   { path: 'home', component: HomePageComponent },
   { path: 'signup', component: SignupPageComponent },
   { path: 'login', component: LoginPageComponent },
-  { path: 'workspace', component: WorkspaceComponent },
+  { path: 'boards', component: BoardsComponent },
+  { path: 'workspace/:id', component: WorkspaceComponent },
   { path: 'link/:token', component: LinkPageComponent },
   { path: '',   redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }

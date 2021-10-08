@@ -744,36 +744,12 @@ export class ListsComponent implements OnChanges{
   logOut() {
     if(confirm("Are you sure you want to log out?")) {
       this.authService.logOut().subscribe((responseData) => {
-        this.stopRefresh();
+        this.authService.stopRefresh();
         if (responseData.status == 200) {localStorage.clear();
           this.router.navigate(['/home']);}
       });
     }
   };
-
-  timerToken = setInterval(() => {
-    if (localStorage.getItem('token')) {
-      this.authService.refreshTokens().subscribe((responseData) => {
-        localStorage.removeItem('refresh');
-        localStorage.removeItem('token');
-
-        localStorage.setItem('refresh', responseData.body.refresh.token);
-        localStorage.setItem('token', responseData.body.token);
-      },
-        error =>
-        {
-          console.log(error);
-          if (error.status == 406) {
-            this.router.navigate(['/home']);
-          }
-        }
-      )
-    }
-    }, 180000);
-
-  stopRefresh() {
-    clearTimeout(this.timerToken)
-  }
 
   showHideTitleOptionsFunction () {
     this.showHideTitleOptions = !this.showHideTitleOptions;
